@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>
+<web-app id="TrackWar">
+    
+    <!--
+     *** To change the servlet location to the root of the URL:
+     ***  1) In this 'web.xml' file:
+     ***     - Set <servlet-mapping>/<url-pattern> to "/"
+     ***     - Set <taglib>/<taglib-uri> to "."
+     ***  2) In 'loginSession.jsp':
+     ***     - Set 'taglib uri="." prefix="gts"'
+     ***  3) In 'webapp.conf':
+     ***     - Set "track.baseURI=/"
+     -->
+     
+    <!--
+     *** To change the login session timeout value:
+     *** !) In the file "$CATALINA_HOME/conf/web.xml", set the "session-timeout" value 
+     ***    to the number of minutes to maintain the session:
+     ***     <session-config>
+     ***         <session-timeout>240</session-timeout>
+     ***     </session-config>
+     -->
+
+    <display-name>TrackWar</display-name>
+    <description>Device mapped tracking</description>
+
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.opengts.war.track.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>characterEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>overrideRequestEncoding</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/Track</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>*.csv</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>*.xml</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>*.kml</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.opengts.war.tools.RTConfigContextListener</listener-class>
+    </listener>
+
+    <!-- ====================================================================== -->
+    
+    <servlet>
+        <servlet-name>Track</servlet-name>
+        <servlet-class>org.opengts.war.track.Track</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+          <!-- <url-pattern>/</url-pattern> -->
+        <url-pattern>/Track</url-pattern>
+          <!-- 'url-pattern' must match "org.opengts.war.track.Track.BASE_URI()" -->
+          <!-- ['Track.BASE_URI()' can also be set in the 'webapps.conf' runtime config property "track.baseURI"] -->
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+        <url-pattern>/Marker</url-pattern>
+    </servlet-mapping>
+ 
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+        <url-pattern>*.csv</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+        <url-pattern>*.txt</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+        <url-pattern>*.xml</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Track</servlet-name>
+        <url-pattern>*.kml</url-pattern>
+    </servlet-mapping>
+
+    <taglib>
+         <taglib-uri>./Track</taglib-uri>
+           <!-- 'taglib-uri' must match 'taglib uri="xxxx"' value in 'loginSession.jsp' file -->
+         <taglib-location>/WEB-INF/tld/Track.tld</taglib-location>
+    </taglib>
+    
+    <!-- ====================================================================== -->
+    <!-- This 'Service' servlet may not be present in all releases -->
+    
+    <servlet>
+        <servlet-name>Service</servlet-name>
+        <servlet-class>org.opengts.extra.war.service.Service</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Service</servlet-name>
+          <!-- <url-pattern>/</url-pattern> -->
+        <url-pattern>/Service</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service</servlet-name>
+          <!-- <url-pattern>/</url-pattern> -->
+        <url-pattern>/ws</url-pattern>
+    </servlet-mapping>
+
+    <!-- ====================================================================== -->
+
+</web-app>

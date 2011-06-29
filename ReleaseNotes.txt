@@ -1,0 +1,27 @@
+
+Version 2.2.9 [2010/11/29]
+- NEW: Added new device communication server (DCS) support for TAIP (Trimble ASCII 
+       Interface Protocol).
+- NEW: Added "lastFuelLevel" field to Device table record.
+- NEW: Support PrivateLabel subdomain look-up for custom URLs.
+- NEW: Added support for menu "button" selections on main menu (see the property
+       "topMenu.menuType" in the "private.xml" file).
+- CHG: Removed 'ACTION_SAVE_LAST' from the default action in "RuleFactory.java".
+- FIX: Fixed "sysadmin" login when using the user email address to login.
+- FIX: Fixed "Payload.java" null-termination parsing of fixed-length String fields.
+
+-----------------------------------------------------------------------------------
+
+Project Home Page:
+    http://www.opengts.org
+    
+Download Latest Version from SourceForge:
+    https://sourceforge.net/projects/opengts/
+    
+Documentation (installation/configuration, tutorials, FAQ):
+    http://www.opengts.org/documentation.html
+    http://www.geotelematic.com/documentation.html
+    
+GTS Enterprise:
+    http://www.geotelematic.com/gts.html
+

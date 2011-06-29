@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?>
+<!DOCTYPE ReportDefinition SYSTEM "dcservers.dtd" >
+
+<!-- 
+  =======================================================================================
+  Project: OpenGTS - Open GPS Tracking System
+  URL    : http://www.opengts.org
+  File   : dcservers.xml
+  =======================================================================================
+  Change History:
+   2009/09/23  Martin D. Flynn
+      - Initial Release
+  =======================================================================================
+-->
+
+<!-- 
+  =======================================================================================
+  DCServerConfig tag attributes:
+    "bindAddress" - the IP address (or host) interface to which these servers will "bind"
+       Typically only necessary if this computer has more than one network interface.
+       If this value is blank, then the server will bind to all network interfaces.
+    "backlog" - The maximum queue length for incoming connection indications (a request to 
+       connect) is set to this backlog value.  If a connection indication arrives when the 
+       queue is full, the connection is refused.  (see "java.net.ServerSocket")
+    "portOffset" - An offset value to add to the specified ports before setting up the
+       port 'listeners'.  This value should typically remain '0'.
+  =======================================================================================
+-->
+
+<!-- ================================================================================ -->
+<DCServerConfig
+    bindAddress=""
+    backlog=""
+    portOffset="0"
+    includeDir="dcservers"
+    >
+    <!-- ================================================================================
+     === Standard properties:
+     ===    uniqueIdPrefix          - [String]
+     ===    commandProtocol         - [tcp|udp|sms]
+     ===    ackResponsePort         - [int]
+     ===    clientCommandPort       - [int]
+     ===    clientCommandPort.udp   - [int]
+     ===    clientCommandPort.tcp   - [int]
+     ===    tcpIdleTimeoutMS        - [long]
+     ===    tcpPacketTimeoutMS      - [long]
+     ===    tcpSessionTimeoutMS     - [long]
+     ===    udpIdleTimeoutMS        - [long]
+     ===    udpPacketTimeoutMS      - [long]
+     ===    udpSessionTimeoutMS     - [long]
+     ===    minimumSpeedKPH         - [double]
+     ===    estimateOdometer        - [boolean]
+     ===    simulateGeozones        - [boolean]
+     ===    simulateDigitalInputs   - [boolean]
+     ===    minimumMovedMeters      - [double]
+     ===    saveRawDataPackets      - [boolean]
+     ===    startStopSupported      - [boolean]
+     ===    statusLocationInMotion  - [boolean] Translate Location to InMotion
+     -->
+
+    <!-- ================================================================================ -->
+    <Include file="dcserver_template.xml" optional="true"/>
+    <DCServer name="template">
+        <Description><![CDATA[
+            Example Template Server
+            ]]></Description>
+       <ListenPorts 
+            tcpPort="31200" 
+            udpPort="31200"
+            />
+        <Properties>
+            <Property key="parseFormat">1</Property>               
+            <Property key="minimumSpeedKPH">4.0</Property>        
+            <!-- <Property key="estimateOdometer">true</Property>       -->
+            <!-- <Property key="simulateGeozones">true</Property>       -->
+            <!-- <Property key="simulateDigitalInputs">0xFF</Property>  -->
+        </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+    <DCServer name="GP6000">
+        <Description><![CDATA[
+            GP6000 Server
+            ]]></Description>
+       <ListenPorts 
+            tcpPort="31300" 
+            udpPort="31300"
+            />
+        <Properties>
+            <Property key="parseFormat">1</Property>               
+            <Property key="minimumSpeedKPH">4.0</Property>        
+            <!-- <Property key="estimateOdometer">true</Property>       -->
+            <!-- <Property key="simulateGeozones">true</Property>       -->
+            <!-- <Property key="simulateDigitalInputs">0xFF</Property>  -->
+        </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+    <DCServer name="gtsdmtp">
+        <Description><![CDATA[
+            OpenDMTP
+            ]]></Description>
+        <ListenPorts 
+            tcpPort="31000" 
+            udpPort="31000"
+            />
+        <Properties>
+            <Property key="firstSessionNegotiation">true</Property>
+            <Property key="udpReturnResponse">true</Property>
+            <Property key="simulateGeozones">false</Property>
+            <!-- <Property key="customEvent.55">H|1|0|2 H|2|0|4 H|6|0|8 H|8|0|2 H|9|0|2 H|10|0|3 H|11|0|3 H|12|0|4 H|93|0|2 H|88|0|2 H|82|0|4 H|4|0|1</Property> -->
+            </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+    <DCServer name="aspicore">
+        <Description><![CDATA[
+            Aspicore GSM Tracker
+            ]]></Description>
+        <UniqueIDPrefix><![CDATA[
+            s60_
+            imei_
+            *
+            ]]></UniqueIDPrefix>
+        <ListenPorts 
+            tcpPort="31265" 
+            udpPort="31265"
+            />
+        <Properties>
+            <Property key="minimumSpeedKPH">3.0</Property>
+            <Property key="statusLocationInMotion">true</Property>
+            <Property key="minimumMovedMeters">0</Property>
+            <Property key="estimateOdometer">false</Property>
+            <Property key="simulateGeozones">true</Property>
+            <!-- -->
+            <Property key="tcpIdleTimeoutMS">0</Property>
+            <Property key="tcpPacketTimeoutMS">0</Property>
+            <Property key="tcpSessionTimeoutMS">0</Property>
+            <!-- -->
+            <Property key="udpIdleTimeoutMS">3000</Property>
+            <Property key="udpPacketTimeoutMS">4000</Property>
+            <Property key="udpSessionTimeoutMS">10000</Property>
+            </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+    <DCServer name="icare">
+        <Description><![CDATA[
+            ICare
+            ]]></Description>
+        <UniqueIDPrefix><![CDATA[
+            icare_
+            imei_
+            *
+            ]]></UniqueIDPrefix>
+        <ListenPorts 
+            tcpPort="31260" 
+            udpPort="31260"
+            />
+        <Properties>
+            </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+    <DCServer name="sipgear">
+        <Description><![CDATA[
+            ZhongShan SIPGEAR Technology Co, Ltd.
+            ]]></Description>
+        <UniqueIDPrefix><![CDATA[
+            sip_
+            imei_
+            *
+            ]]></UniqueIDPrefix>
+        <ListenPorts 
+            tcpPort="31270" 
+            udpPort="31270"
+            />
+        <Properties>
+            </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+    
+    <DCServer name="taip">
+        <Description><![CDATA[
+            TAIP (Trimble ASCII Interface Protocol)
+            ]]></Description>
+        <UniqueIDPrefix><![CDATA[
+            taip_
+            ]]></UniqueIDPrefix>
+        <ListenPorts 
+            tcpPort="31275" 
+            udpPort="31275"
+            />
+        <EventCodeMap enabled="false">
+            </EventCodeMap>
+        <Properties>
+            <Property key="minimumSpeedKPH">4.0</Property>
+            <Property key="estimateOdometer">true</Property>
+            <Property key="simulateGeozones">false</Property>
+            <Property key="tcpIdleTimeoutMS">10000</Property>
+            <Property key="tcpPacketTimeoutMS">10000</Property>
+            <Property key="tcpSessionTimeoutMS">300000</Property>
+            <Property key="clientCommandPort.udp">0</Property>
+            <Property key="clientCommandPort.tcp">0</Property>
+            </Properties>
+    </DCServer>
+
+    <!-- ================================================================================ -->
+
+</DCServerConfig>
+

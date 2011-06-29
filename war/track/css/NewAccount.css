@@ -1,0 +1,13 @@
+
+/* New Account" page */
+.newAccountTable {
+    margin-top: 50px;
+    width: 400px;
+}
+
+.newAccountCell { 
+    padding: 10px; 
+    border: solid #555555 1px; 
+    background-color: #FBFBFB; 
+    text-align: center;
+}
