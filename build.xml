@@ -1494,6 +1494,42 @@ File   : build.xml
   </target>
 
   <!-- ======================================================================== -->
+  <!-- Target: GP6000 -->
+  <target name="GP6000" depends="prepare,gtsdb" 
+    description="Create 'Device Communication Server' template ...">
+    <echo message="GP6000 ..."/>
+
+    <!-- compile template -->
+    <javac srcdir="${src.gts}"
+        includeAntRuntime="false"
+        source="${compiler.source}"
+        target="${compiler.target}"
+        destdir="${build.home}"
+        debug="${compile.debug}"
+        nowarn="${compile.nowarn}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+        <compilerarg compiler="${compiler.compiler}" value="${compile.Xlint}"/>
+        <classpath refid="compile.classpath"/>
+        <include name="org/opengts/servers/*.java"/>
+        <include name="org/opengts/servers/GP6000/**/*.java"/>
+    </javac>
+
+    <!-- create GP6000.jar server -->
+    <jar jarfile="${build.lib}/GP6000.jar">
+        <manifest>
+            <attribute name="Class-Path" value="${Server_Jar_Classpath}"/>
+            <attribute name="Main-Class" value="org.opengts.servers.GP6000.Main"/>
+        </manifest>
+        <fileset dir="${build.home}">
+            <include name="org/opengts/servers/*.class"/>
+            <include name="org/opengts/servers/GP6000/**/*.class"/>
+        </fileset>
+    </jar>
+
+  </target>
+
+  <!-- ======================================================================== -->
   <!-- ======================================================================== -->
 
   <!-- Target: [OLD] Device Parser Module example template -->

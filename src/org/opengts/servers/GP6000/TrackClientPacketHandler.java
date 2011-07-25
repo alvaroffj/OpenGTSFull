@@ -1,77 +1,3 @@
-// ----------------------------------------------------------------------------
-// Copyright 2006-2010, GeoTelematic Solutions, Inc.
-// All rights reserved
-// ----------------------------------------------------------------------------
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-// http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// ----------------------------------------------------------------------------
-// Description:
-//  Template data packet 'business' logic.
-//  This module is an *example* of how client data packets can be parsed and 
-//  inserted into the EventData table.  Since every device protocol is different,
-//  significant changes will likely be necessary to support the protocol used by
-//  your chosen device.
-// ----------------------------------------------------------------------------
-// Notes:
-// - See the OpenGTS_Config.pdf document for additional information regarding the
-//   implementation of a device communication server.
-// - Implementing a device communication server for your chosen device may take a 
-//   signigicant and substantial amount of programming work to accomplish, depending 
-//   on the device protocol.  To implement a server, you will likely need an in-depth 
-//   understanding of TCP/UDP based communication, and a good understanding of Java 
-//   programming techniques, including socket communication and multi-threading. 
-// - The first and most important step when starting to implement a device 
-//   communication server for your chosen device is to obtain and fully understand  
-//   the protocol documentation from the manufacturer of the device.  Attempting to 
-//   reverse-engineer a raw-socket base protocol can prove extremely difficult, if  
-//   not impossible, without proper protocol documentation.
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-// Change History:
-//  2006/06/30  Martin D. Flynn
-//     -Initial release
-//  2007/07/27  Martin D. Flynn
-//     -Moved constant information to 'Constants.java'
-//  2007/08/09  Martin D. Flynn
-//     -Added additional help/comments.
-//     -Now uses "imei_" as the primary IMEI prefix for the unique-id when
-//      looking up the Device record (for data format example #1)
-//     -Added a second data format example (#2) which includes the parsing of a
-//      standard $GPRMC NMEA-0183 record.
-//  2008/02/17  Martin D. Flynn
-//     -Added additional help/comments.
-//  2008/03/12  Martin D. Flynn
-//     -Added ability to compute a GPS-based odometer value
-//     -Added ability to update the Device record with IP-address and last connect time.
-//  2008/05/14  Martin D. Flynn
-//     -Integrated Device DataTransport interface
-//  2008/06/20  Martin D. Flynn
-//     -Added some additional comments regarding the use of 'terminate' and 'terminateSession()'.
-//  2008/12/01  Martin D. Flynn
-//     -Added entry point for parsing GPS packet data store in a flat file.
-//  2009/04/02  Martin D. Flynn
-//     -Changed default for 'INSERT_EVENT' to true
-//  2009/05/27  Martin D. Flynn
-//     -Added changes for estimated odometer calculations, and simulated geozones
-//  2009/06/01  Martin D. Flynn
-//     -Updated to utilize Device gerozone checks
-//  2009/08/07  Martin D. Flynn
-//     -Updated to use "DCServerConfig" and "GPSEvent"
-//  2009/10/02  Martin D. Flynn
-//     -Modified to describe how to return ACK packets back to the device.
-//     -Added parser for RTProperties String (format #3)
-// ----------------------------------------------------------------------------
 package org.opengts.servers.GP6000;
 
 import java.lang.*;
@@ -370,70 +296,66 @@ public class TrackClientPacketHandler
     }
 
     /* workhorse of the packet handler */
+    @Override
     public byte[] getHandlePacket(byte pktBytes[]) {
-
-        // After determining the length of a client packet (see method 'getActualPacketLength'),
-        // this method is called with the single packet which has been read from the client.
-        // It is the responsibility of this method to determine what type of packet was received
-        // from the client, parse/insert any event data into the tables, and return any expected 
-        // response that the client may be expected in the form of a byte array.
         if ((pktBytes != null) && (pktBytes.length > 0)) {
-
-            /* (debug message) display received data packet */
-            Print.logInfo("Recv[HEX]: " + StringTools.toHexString(pktBytes));
-            String s = StringTools.toStringValue(pktBytes).trim(); // remove leading/trailing spaces
-            Print.logInfo("Recv[TXT]: " + s); // debug message
-
-            /* parse/insert event */
-            byte rtn[] = null;
-            switch (DATA_FORMAT_OPTION) {
-                case 1:
-                    rtn = this.parseInsertRecord_ASCII_1(s);
-                    break;
-                case 2:
-                    rtn = this.parseInsertRecord_ASCII_2(s);
-                    break;
-                case 3:
-                    rtn = this.parseInsertRecord_RTProps(s);
-                    break;
-                default:
-                    Print.logError("Unspecified data format");
-                    break;
+            Gps gps;
+            Command com;
+            String a = StringTools.toHexString(pktBytes);
+            Print.logInfo("Recv[HEX]: " + a);
+            String[] ini = new String[2];
+            ini[0] = "24";
+            ini[1] = "28";
+            int[] index = new int[ini.length];
+            int head = 0;
+            int menor;
+            List<String> str = new LinkedList();
+            String aux = "";
+            int largo = a.length();
+            while(largo>0) {
+                menor = 0;
+                for(int i=0; i<ini.length; i++) {
+                    index[i] = a.indexOf(ini[i]);
+                    if(i>0) {
+                        if(index[i] >= 0 && index[i] < index[menor]) menor = i;
+                    } else if(index[i]<0) index[i] = 1000000;
+                }
+                if(index[menor]<largo) {
+                    switch(menor) {
+                        case 0: //transmision gps
+                            aux = a.substring(index[menor]);
+                            a = aux;
+                            gps = new Gps(aux);
+                            head = gps.fin;
+                            gps.save();
+        //                    System.out.println(gps);
+                            break;
+                        case 1: //comando
+                            int fin = a.indexOf("29");
+                            if(fin<0 || fin<index[menor]) {
+                                head = largo;
+                                Print.logInfo("Datos insuficientes");
+                                break;
+                            }
+                            aux = a.substring(index[menor], fin+2);
+                            com = new Command(aux);
+                            str.add(aux);
+                            head = fin+2;
+                            com.save();
+        //                    System.out.println(com);
+                            break;
+                    }
+                    a = a.substring(head, a.length());
+                    largo = a.length();
+                } else {
+                    largo = 0;
+                    a = "";
+                }
             }
-            // Note:
-            // The above examples assume ASCII data.  If the data arrives as a binary data packet,
-            // the utility class "org.opengts.util.Payload" can be used to parse the binary data:
-            // For example:
-            //   Assume 'pktBytes' contains the following binary hex data:
-            //      01 02 03 04 05 06 07 08 09 0A 0B
-            //   One way to parse this binary data would be as follows:
-            //      Payload p = new Payload(pktBytes);
-            //      int fld_1 = (int)p.readLong(3,0L);   // parse 0x010203   into 'fld_1'
-            //      int fld_2 = (int)p.readLong(4,0L);   // parse 0x04050607 into 'fld_2'
-            //      int fld_3 = (int)p.readLong(2,0L);   // parse 0x00809    into 'fld_2'
-            //      int fld_4 = (int)p.readLong(2,0L);   // parse 0x0A0B     into 'fld_2'
-
-            /* return response */
-            // If the client is expecting to receive a response from the server (such as an
-            // acknowledgement), this is where the server should compose a returned response
-            // in the form of an array of bytes which should be returned here.  This byte array
-            // will then be transmitted back to the client.
-            return rtn; // no return packets are expected
-
         } else {
-
-            /* no packet date received */
             Print.logInfo("Empty packet received ...");
-            return null; // no return packets are expected
-
         }
-
-        // when this method returns, the server framework then starts the process over again
-        // attempting to read another packet from the client device (see method 'getActualPacketLength').
-        // If this server determines that communicqtion with the client device has completed, then
-        // the above "terminateSession" method should return true [the method "setTerminate()" is 
-        // provided to facilitate session termination - see "setTerminate" above].
-
+        return null; // no return packets are expected
     }
 
     /* final packet sent to device before session is closed */
@@ -923,7 +845,7 @@ public class TrackClientPacketHandler
 
         /* create client packet handler */
         TrackClientPacketHandler tcph = new TrackClientPacketHandler();
-
+        Print.logInfo("DATA_FORMAT_OPTION: " + DATA_FORMAT_OPTION);
         /* DEBUG sample data */
         if (RTConfig.getBoolean(Main.ARG_DEBUG, false)) {
             String data[] = null;
