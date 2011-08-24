@@ -1867,6 +1867,7 @@ public class ServerSocketThread
 
                     /* check packet completion */
                     if (packetLen >= maxLen) {
+                        Print.logWarn("Paquete completo: 0x" + StringTools.toHexString(packet, 0, packetLen));
                         // we've read all the bytes we can
                         break;
                     } else
@@ -1875,6 +1876,7 @@ public class ServerSocketThread
                         if (pktTerm[pktState] == (byte)lastByte) {
                             pktState++;
                             if (pktState >= pktTerm.length) {
+                                Print.logWarn("Paquete completo 2: 0x" + StringTools.toHexString(packet, 0, packetLen));
                                 // we've matched the packet terminating pattern
                                 break;
                             }
@@ -1884,6 +1886,7 @@ public class ServerSocketThread
                         }
                     } else
                     if ((actualLen > 0) && (packetLen >= actualLen)) {
+                        Print.logWarn("Paquete completo 3: 0x" + StringTools.toHexString(packet, 0, packetLen));
                         // we've read the bytes we expected to read
                         break;
                     } else
@@ -1902,6 +1905,7 @@ public class ServerSocketThread
                             // look for line terminator character
                             //Print.logInfo("Last Byte Read: %s [%s]", StringTools.toHexString(lastByte,8), StringTools.toHexString(packet[packetLen-1]));
                             if (ServerSocketThread.this.isLineTerminatorChar(lastByte)) {
+                                Print.logWarn("Paquete completo 4: 0x" + StringTools.toHexString(packet, 0, packetLen));
                                 // last byte was already a line terminator
                                 packetLen--; // remove terminator
                                 break;

@@ -84,6 +84,7 @@ public class Gps {
         int n=this.paquete.size();
         for(int i=0; i<n; i++) {
             GpsData aux = this.paquete.get(i);
+//            Print.logInfo(aux.toString());
             datos = "&fixtime=" + aux.fixtime + ""
                     + "&horautc=" + aux.time + ""
                     + "&fechautc=" + aux.date + ""
@@ -95,6 +96,7 @@ public class Gps {
                     + "&altitude=" + 0 + ""
                     + "&distanceKM=0"
                     + "&odometerKM=" + aux.mileage + ""
+                    + "&sa="+aux.status[0]+""+aux.status[1]+""+aux.status[2]+""+aux.status[3]+""
                     + "&rawData=" + this.hex;
             try {
                 lanzar(base+datos);

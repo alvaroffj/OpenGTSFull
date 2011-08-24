@@ -57,35 +57,41 @@ public class Command {
         this.parameters = new String[4];
         this.aux = new String[14];
         this.hex = this.hex.substring(2, this.hex.length()-2);
+        int auxN = this.hex.length();
         for(int i=0; i<n; i++) {
-            if(i!=7) {
-                this.aux[i] = this.hex.substring(acum, acum+largos[i]);
-                this.aux[i] = this.hexToString(this.aux[i]);
-            } else {
-                largos[i] = Integer.parseInt(aux[i-1])*2;
-                this.aux[i] = this.hex.substring(acum, acum+largos[i]);
-            }
-            acum += largos[i]+2;
+            if(acum < auxN) {
+                if(i!=7) {
+                    this.aux[i] = this.hex.substring(acum, acum+largos[i]);
+                    this.aux[i] = this.hexToString(this.aux[i]);
+                } else {
+                    largos[i] = Integer.parseInt(aux[i-1])*2;
+                    this.aux[i] = this.hex.substring(acum, acum+largos[i]);
+                }
+                acum += largos[i]+2;
+                System.out.println(this.aux[i]);
+            } else break;
         }
         this.imei = this.aux[0];
         this.pVer = this.aux[1];
         this.commandType = this.aux[2];
-        this.commandSN = this.aux[3];
-        this.parameters[0] = this.aux[4];
-        this.parameters[1] = this.aux[5];
-        this.parameters[2] = this.aux[6];
-        this.parameters[3] = this.aux[7];
-        int dataL = Integer.parseInt(this.parameters[2]);
-        this.data = new String[dataL];
-        for(int i=0; i<dataL; i++) {
-            this.data[i] = this.parameters[3].substring(i*2, (i+1)*2);
+        if(this.commandType.compareTo("U02")==0) {
+            this.commandSN = this.aux[3];
+            this.parameters[0] = this.aux[4];
+            this.parameters[1] = this.aux[5];
+            this.parameters[2] = this.aux[6];
+            this.parameters[3] = this.aux[7];
+            int dataL = Integer.parseInt(this.parameters[2]);
+            this.data = new String[dataL];
+            for(int i=0; i<dataL; i++) {
+                this.data[i] = this.parameters[3].substring(i*2, (i+1)*2);
+            }
+            this.fecha = this.aux[9];
+            this.date = this.fecha.substring(0, 6);
+            this.time = this.fecha.substring(6);
+            this.fixtime = this.getFixtime(Long.parseLong(this.date), Long.parseLong(this.time));
+            this.latitude = this.parseLatitude(this.aux[13], this.aux[12]);
+            this.longitude = this.parseLongitude(this.aux[11], this.aux[10]);
         }
-        this.fecha = this.aux[9];
-        this.date = this.fecha.substring(0, 6);
-        this.time = this.fecha.substring(6);
-        this.fixtime = this.getFixtime(Long.parseLong(this.date), Long.parseLong(this.time));
-        this.latitude = this.parseLatitude(this.aux[13], this.aux[12]);
-        this.longitude = this.parseLongitude(this.aux[11], this.aux[10]);
     }
     
     public void save() {
@@ -105,6 +111,7 @@ public class Command {
         for(int i=0; i<this.data.length; i++) {
             sensor += this.data[i];
         }
+        Print.logInfo("Trying : " + base+sensor);
         try {
             lanzar(base+sensor);
         } catch (MalformedURLException e) {

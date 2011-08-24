@@ -85,9 +85,9 @@ public class Constants
     // The time to wait to receive the 1st byte after the session has started
     public static final long    TIMEOUT_TCP_IDLE        = 10000L;
     // After the 1st byte, the remainder of a packet must be read in this timeframe
-    public static final long    TIMEOUT_TCP_PACKET      = 4000L;
+    public static final long    TIMEOUT_TCP_PACKET      = 40000L;
     // The entire session must complete within this timeframe
-    public static final long    TIMEOUT_TCP_SESSION     = 15000L;
+    public static final long    TIMEOUT_TCP_SESSION     = 150000L;
 
     /* UDP Timeouts (milliseconds) */
     // The time to wait to receive the 1st byte after the session has started

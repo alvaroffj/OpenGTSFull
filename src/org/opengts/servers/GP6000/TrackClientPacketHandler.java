@@ -298,7 +298,9 @@ public class TrackClientPacketHandler
     /* workhorse of the packet handler */
     @Override
     public byte[] getHandlePacket(byte pktBytes[]) {
+        Print.logInfo("getHandlePacket");
         if ((pktBytes != null) && (pktBytes.length > 0)) {
+            Print.logInfo("Datos recibidos, empezando a procesar...");
             Gps gps;
             Command com;
             String a = StringTools.toHexString(pktBytes);
@@ -341,8 +343,11 @@ public class TrackClientPacketHandler
                             com = new Command(aux);
                             str.add(aux);
                             head = fin+2;
-                            com.save();
-        //                    System.out.println(com);
+                            if(com.commandType.compareTo("U02") == 0)
+                                com.save();
+                            else {
+                                Print.logInfo("Comando no soportado: "+com.commandType);
+                            }
                             break;
                     }
                     a = a.substring(head, a.length());

@@ -21,7 +21,7 @@ public class GpsData {
     public int fuelLevelL;
     public int fuelLevel;
     public String[] status;
-    public int mileage;
+    public Long mileage = (long)0;
     public int sn;
 
     public GpsData(String hex) {
@@ -39,14 +39,17 @@ public class GpsData {
         this.latitude = this.parseLatitude(auxLat, (this.locating.substring(2, 3).equals("1"))?"N":"S");
         this.longitude = this.parseLongitude(auxLon, (this.locating.substring(1, 2).equals("1"))?"E":"W");
         this.speed = (float) (Integer.parseInt(this.hex.substring(30, 32), 16)*1.85);
-        this.heading = Integer.parseInt(this.hex.substring(32, 34), 16);
+        this.heading = Integer.parseInt(this.hex.substring(32, 34), 16)*2;
         this.fuelLevelH = Integer.parseInt(this.hex.substring(34, 36), 16);
         if(this.hex.length()>54)
             this.fuelLevelL = Integer.parseInt(this.hex.substring(52, 54), 16);
         else this.fuelLevelL = 0;
         this.fuelLevel = this.fuelLevelH*256 + this.fuelLevelL;
         this.status = this.parseStatus(this.hex.substring(36, 44));
-        this.mileage = Integer.parseInt(this.hex.substring(44, 52), 16);
+        if(this.hex.length()>52)
+            this.mileage = Long.parseLong(this.hex.substring(44, 52), 16);
+        else 
+            this.mileage = (long)0;
         if(this.hex.length()>56)
             this.sn = Integer.parseInt(this.hex.substring(54, 56), 16);
     }

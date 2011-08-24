@@ -88,7 +88,8 @@
             />
         <Properties>
             <Property key="parseFormat">1</Property>               
-            <Property key="minimumSpeedKPH">4.0</Property>        
+            <Property key="minimumSpeedKPH">4.0</Property>     
+<!--            <Property key="packetLenEndOfStream">true</Property>-->
             <!-- <Property key="estimateOdometer">true</Property>       -->
             <!-- <Property key="simulateGeozones">true</Property>       -->
             <!-- <Property key="simulateDigitalInputs">0xFF</Property>  -->
