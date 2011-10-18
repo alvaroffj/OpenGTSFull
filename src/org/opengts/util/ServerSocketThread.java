@@ -1816,7 +1816,8 @@ public class ServerSocketThread
             /* packet/read length */
             int maxLen = this.getMaximumPacketLength(clientHandler); // safety net only
             int minLen = this.getMinimumPacketLength(clientHandler); // tcp/udp dependent
-
+            Print.logWarn("maxLen: " + maxLen);
+            Print.logWarn("minLen: " + minLen);
             /* set default socket timeout */
             //client.setSoTimeout(10000);
 
@@ -1867,72 +1868,82 @@ public class ServerSocketThread
 
                     /* check packet completion */
                     if (packetLen >= maxLen) {
-                        Print.logWarn("Paquete completo: 0x" + StringTools.toHexString(packet, 0, packetLen));
+                        Print.logStackTrace("Paquete completo: 0x" + StringTools.toHexString(packet, 0, packetLen));
                         // we've read all the bytes we can
                         break;
-                    } else
-                    if (pktTerm != null) {
-                        // check packet termination pattern
-                        if (pktTerm[pktState] == (byte)lastByte) {
-                            pktState++;
-                            if (pktState >= pktTerm.length) {
-                                Print.logWarn("Paquete completo 2: 0x" + StringTools.toHexString(packet, 0, packetLen));
-                                // we've matched the packet terminating pattern
-                                break;
+                    } else {
+                        Print.logStackTrace("packetLen ("+packetLen+") < maxLen ("+maxLen+")");
+                        if (pktTerm != null) {
+                            // check packet termination pattern
+                            if (pktTerm[pktState] == (byte)lastByte) {
+                                pktState++;
+                                if (pktState >= pktTerm.length) {
+                                    Print.logWarn("Paquete completo 2: 0x" + StringTools.toHexString(packet, 0, packetLen));
+                                    // we've matched the packet terminating pattern
+                                    break;
+                                }
+                            } else {
+                                // back to initial state
+                                pktState = 0;
                             }
                         } else {
-                            // back to initial state
-                            pktState = 0;
-                        }
-                    } else
-                    if ((actualLen > 0) && (packetLen >= actualLen)) {
-                        Print.logWarn("Paquete completo 3: 0x" + StringTools.toHexString(packet, 0, packetLen));
-                        // we've read the bytes we expected to read
-                        break;
-                    } else
-                    if ((clientHandler != null) && (actualLen <= 0) && (packetLen >= minLen)) {
-                        // we've read the minimum number of bytes
-                        // get the actual/next expected packet length
-                        int     pktLen  = clientHandler.getActualPacketLength(packet, packetLen);
-                        boolean actual  = (pktLen < PACKET_LEN_INCREMENTAL_);
-                        int     nextLen = actual? pktLen : (pktLen & 0xFFFF);
-                        // check next packet length
-                        if (nextLen == packetLen) {
-                            // already have exactly what we need
-                            break; 
-                        } else
-                        if (nextLen == PACKET_LEN_ASCII_LINE_TERMINATOR) {
-                            // look for line terminator character
-                            //Print.logInfo("Last Byte Read: %s [%s]", StringTools.toHexString(lastByte,8), StringTools.toHexString(packet[packetLen-1]));
-                            if (ServerSocketThread.this.isLineTerminatorChar(lastByte)) {
-                                Print.logWarn("Paquete completo 4: 0x" + StringTools.toHexString(packet, 0, packetLen));
-                                // last byte was already a line terminator
-                                packetLen--; // remove terminator
+                            Print.logStackTrace("NO pktTerm");
+                            if ((actualLen > 0) && (packetLen >= actualLen)) {
+                                Print.logStackTrace("Paquete completo 3: 0x" + StringTools.toHexString(packet, 0, packetLen));
+                                // we've read the bytes we expected to read
                                 break;
                             } else {
-                                actualLen = maxLen;
-                                isTextLine = true;
+                                Print.logStackTrace("Falta por leer");
+                                Print.logStackTrace("packetLen: "+packetLen);
+                                Print.logStackTrace("actualLen: "+actualLen);
+                                if ((clientHandler != null) && (actualLen <= 0) && (packetLen >= minLen)) {
+                                    // we've read the minimum number of bytes
+                                    // get the actual/next expected packet length
+                                    int     pktLen  = clientHandler.getActualPacketLength(packet, packetLen);
+                                    boolean actual  = (pktLen < PACKET_LEN_INCREMENTAL_);
+                                    int     nextLen = actual? pktLen : (pktLen & 0xFFFF);
+                                    // check next packet length
+                                    if (nextLen == packetLen) {
+                                        // already have exactly what we need
+                                        break; 
+                                    } else
+                                    if (nextLen == PACKET_LEN_ASCII_LINE_TERMINATOR) {
+                                        // look for line terminator character
+                                        //Print.logInfo("Last Byte Read: %s [%s]", StringTools.toHexString(lastByte,8), StringTools.toHexString(packet[packetLen-1]));
+                                        if (ServerSocketThread.this.isLineTerminatorChar(lastByte)) {
+                                            Print.logStackTrace("Paquete completo 4: 0x" + StringTools.toHexString(packet, 0, packetLen));
+                                            // last byte was already a line terminator
+                                            packetLen--; // remove terminator
+                                            break;
+                                        } else {
+                                            actualLen = maxLen;
+                                            isTextLine = true;
+                                        }
+                                    } else
+                                    if (nextLen <= PACKET_LEN_END_OF_STREAM) {
+                                        // read the rest of the stream
+                                        actualLen = maxLen;
+                                        failOnEOS = false;
+                                    } else
+                                    if (nextLen > maxLen) {
+                                        // specified length is greater that the maximum
+                                        Print.logStackTrace("Actual length [" + nextLen + "] > Maximum length [" + maxLen + "]");
+                                        actualLen = maxLen;
+                                    } else
+                                    if (actual) {
+                                        // read until actual size
+                                        actualLen = nextLen;
+                                    } else {
+                                        // reset minimum to next length
+                                        minLen = nextLen;
+                                    }
+                                } else {
+                                    Print.logStackTrace("NO se leyo el minimo");
+                                    Print.logStackTrace("Murio");
+                                }
                             }
-                        } else
-                        if (nextLen <= PACKET_LEN_END_OF_STREAM) {
-                            // read the rest of the stream
-                            actualLen = maxLen;
-                            failOnEOS = false;
-                        } else
-                        if (nextLen > maxLen) {
-                            // specified length is greater that the maximum
-                            Print.logStackTrace("Actual length [" + nextLen + "] > Maximum length [" + maxLen + "]");
-                            actualLen = maxLen;
-                        } else
-                        if (actual) {
-                            // read until actual size
-                            actualLen = nextLen;
-                        } else {
-                            // reset minimum to next length
-                            minLen = nextLen;
                         }
                     }
-
                 } // while (true)
             } catch (SSReadTimeoutException t) {
                 // This could mean a protocol error
