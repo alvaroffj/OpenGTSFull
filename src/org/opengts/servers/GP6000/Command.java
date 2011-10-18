@@ -82,8 +82,18 @@ public class Command {
             this.parameters[3] = this.aux[7];
             int dataL = Integer.parseInt(this.parameters[2]);
             this.data = new String[dataL];
+            String daAux = "";
             for(int i=0; i<dataL; i++) {
-                this.data[i] = this.parameters[3].substring(i*2, (i+1)*2);
+                if(this.parameters[3].length() >= (i+1)*2) {
+                    daAux = this.parameters[3].substring(i*2, (i+1)*2);
+                    if(daAux.length()>0) {
+                        this.data[i] = "00"+daAux;
+                    } else {
+                        this.data[i] = "0000";
+                    }
+                } else {
+                    this.data[i] = "0000";
+                }
             }
             this.fecha = this.aux[9];
             this.date = this.fecha.substring(0, 6);
