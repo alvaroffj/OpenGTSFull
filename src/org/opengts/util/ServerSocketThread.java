@@ -1816,8 +1816,8 @@ public class ServerSocketThread
             /* packet/read length */
             int maxLen = this.getMaximumPacketLength(clientHandler); // safety net only
             int minLen = this.getMinimumPacketLength(clientHandler); // tcp/udp dependent
-            Print.logWarn("maxLen: " + maxLen);
-            Print.logWarn("minLen: " + minLen);
+//            Print.logWarn("maxLen: " + maxLen);
+//            Print.logWarn("minLen: " + minLen);
             /* set default socket timeout */
             //client.setSoTimeout(10000);
 
