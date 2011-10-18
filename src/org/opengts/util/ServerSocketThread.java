@@ -1937,7 +1937,7 @@ public class ServerSocketThread
             } catch (SSReadTimeoutException t) {
                 // This could mean a protocol error
                 if (packetLen > 0) {
-                    Print.logWarn("Timeout: 0x" + StringTools.toHexString(packet, 0, packetLen));
+                    Print.logWarn("Timeout a: 0x" + StringTools.toHexString(packet, 0, packetLen));
                 }
                 if (ServerSocketThread.this.getTerminateOnTimeout()) {
                     throw t;
