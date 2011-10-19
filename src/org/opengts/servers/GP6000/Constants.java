@@ -73,7 +73,7 @@ public class Constants
     // The maximum expected packet length
     // This value simply provide an upper limit for the maximum length of any single  
     // packet that is expected to be received from the client device.
-    public static final int     MAX_PACKET_LENGTH       = 20;
+    public static final int     MAX_PACKET_LENGTH       = 37;
     
     /* terminate flags */
     // Set to 'true' to close the session on a read timeout
