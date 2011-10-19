@@ -1832,6 +1832,7 @@ public class ServerSocketThread
             boolean isIdle = true;
             boolean isTextLine = false;
             boolean failOnEOS = client.isTCP();
+            boolean gpsTrans = false;
             try {
                 int actualLen = 0;
                 while (true) {
@@ -1847,12 +1848,14 @@ public class ServerSocketThread
                             maxLen = 100;
                             packet = new byte[maxLen];
                             packetLen = 0;
+                            gpsTrans = false;
                         } else { 
                             maxLen = 37;
                             if(lastByte == 36){ //transmision gps
                                 isTextLine = false;
                                 packetLen = 0;
                                 packet = new byte[maxLen];
+                                gpsTrans = true;
                             }
                         }
                     }
@@ -1866,7 +1869,7 @@ public class ServerSocketThread
                     }
 
                     /* look for line terminator? */
-                    if (isTextLine) {
+                    if (isTextLine && !gpsTrans) {
 //                        Print.logInfo("isTextLine: true");
                         if (ServerSocketThread.this.isLineTerminatorChar(lastByte)) {
                             if(lastByte == 41) {
