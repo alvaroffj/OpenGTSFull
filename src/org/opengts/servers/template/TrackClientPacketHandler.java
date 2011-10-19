@@ -257,9 +257,9 @@ public class TrackClientPacketHandler
 
         /* debug message */
         if (this.isDuplex) {
-            Print.logInfo("Begin TCP communication: " + this.ipAddress + " [" + new DateTime() + "]");
+//            Print.logInfo("Begin TCP communication: " + this.ipAddress + " [" + new DateTime() + "]");
         } else {
-            Print.logInfo("Begin UDP communication: " + this.ipAddress + " [" + new DateTime() + "]");
+//            Print.logInfo("Begin UDP communication: " + this.ipAddress + " [" + new DateTime() + "]");
         }
 
     }
@@ -396,9 +396,9 @@ public class TrackClientPacketHandler
         if ((pktBytes != null) && (pktBytes.length > 0)) {
             
             /* (debug message) display received data packet */
-            Print.logInfo("Recv[HEX]: " + StringTools.toHexString(pktBytes));
+//            Print.logInfo("Recv[HEX]: " + StringTools.toHexString(pktBytes));
             String s = StringTools.toStringValue(pktBytes).trim(); // remove leading/trailing spaces
-            Print.logInfo("Recv[TXT]: " + s); // debug message
+//            Print.logInfo("Recv[TXT]: " + s); // debug message
             
             /* parse/insert event */
             byte rtn[] = null;
@@ -514,7 +514,7 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
          * 14: \r\n(2 Bytes)    	:	fin de cadena
 */
 		
-        Print.logInfo("Parsear : " + s);
+//        Print.logInfo("Parsear : " + s);
 
         /* pre-validate */
         if (s == null) {

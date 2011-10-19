@@ -171,9 +171,9 @@ public class TrackClientPacketHandler
 
         /* debug message */
         if (this.isDuplex) {
-            Print.logInfo("Begin TCP communication: " + this.ipAddress + " [" + new DateTime() + "]");
+//            Print.logInfo("Begin TCP communication: " + this.ipAddress + " [" + new DateTime() + "]");
         } else {
-            Print.logInfo("Begin UDP communication: " + this.ipAddress + " [" + new DateTime() + "]");
+//            Print.logInfo("Begin UDP communication: " + this.ipAddress + " [" + new DateTime() + "]");
         }
 
     }
@@ -298,13 +298,13 @@ public class TrackClientPacketHandler
     /* workhorse of the packet handler */
     @Override
     public byte[] getHandlePacket(byte pktBytes[]) {
-        Print.logInfo("getHandlePacket");
+//        Print.logInfo("getHandlePacket");
         if ((pktBytes != null) && (pktBytes.length > 0)) {
-            Print.logInfo("Datos recibidos, empezando a procesar...");
+//            Print.logInfo("Datos recibidos, empezando a procesar...");
             Gps gps;
             Command com;
             String a = StringTools.toHexString(pktBytes);
-            Print.logInfo("Recv[HEX]: " + a);
+//            Print.logInfo("Recv[HEX]: " + a);
             String[] ini = new String[2];
             ini[0] = "24";
             ini[1] = "28";
@@ -380,7 +380,7 @@ public class TrackClientPacketHandler
     /* parse and insert data record */
     private byte[] parseInsertRecord_ASCII_1(String s) {
 
-        Print.logInfo("Parsear : " + s);
+//        Print.logInfo("Parsear : " + s);
 
         /* pre-validate */
 //        if (s == null) {
