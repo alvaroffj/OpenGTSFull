@@ -869,7 +869,7 @@ public class ServerSocketThread
         int termChar[] = this.getLineTerminatorChar();
         if ((termChar != null) && (ch >= 0)) {
             for (int i = 0; i < termChar.length; i++) {
-                Print.logInfo("isLineTerminatorChar: "+termChar[i]+" | "+ch);
+//                Print.logInfo("isLineTerminatorChar: "+termChar[i]+" | "+ch);
                 if (termChar[i] == ch) {
                     return true;
                 }
