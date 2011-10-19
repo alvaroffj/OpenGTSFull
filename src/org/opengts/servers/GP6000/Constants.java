@@ -60,7 +60,7 @@ public class Constants
     //   be called to allow the parser to determine the actual length of the client
     //   packet based on the first few bytes of the data packet (see 'MIN_PACKET_LENGTH').
     public static final boolean ASCII_PACKETS           = false;
-    public static final int     ASCII_LINE_TERMINATOR[] = new int[] { '\r', '\n' };
+    public static final int     ASCII_LINE_TERMINATOR[] = new int[] { '\r', '\n', 41 };
 
     /* packet length */
     // The minimum expected packet length
