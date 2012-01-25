@@ -90,6 +90,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import java.text.SimpleDateFormat;
 import org.opengts.util.*;
 import org.opengts.dbtools.*;
 import org.opengts.db.*;
@@ -98,9 +99,8 @@ import org.opengts.db.tables.*;
 import org.opengts.servers.*;
 
 public class TrackClientPacketHandler
-    extends AbstractClientPacketHandler
-{
-   
+        extends AbstractClientPacketHandler {
+
     // ------------------------------------------------------------------------
     // This data parsing template contains *examples* of 2 different ASCII data formats:
     //
@@ -119,9 +119,7 @@ public class TrackClientPacketHandler
     // be implemented.  The implementation of a device communication server for your chosen
     // device may take a signigicant and substantial amount of programming work to accomplish, 
     // depending on the device protocol.
-
-    public  static int      DATA_FORMAT_OPTION          = 1;
-
+    public static int DATA_FORMAT_OPTION = 1;
     // ------------------------------------------------------------------------
 
     /* estimate GPS-based odometer */
@@ -138,43 +136,37 @@ public class TrackClientPacketHandler
     //    interval between generated "in-motion" events, and how straight or curved the
     //    road is.  Typically, a GPS-based odometer tends to under-estimate the actual
     //    vehicle value.
-    public  static       boolean ESTIMATE_ODOMETER          = false;
-    
+    public static boolean ESTIMATE_ODOMETER = false;
     /* simulate geozone arrival/departure */
     // (enable to insert simulated Geozone arrival/departure EventData records)
-    public  static       boolean SIMEVENT_GEOZONES          = false;
-    
+    public static boolean SIMEVENT_GEOZONES = false;
     /* simulate digital input changes */
-    public  static       long    SIMEVENT_DIGITAL_INPUTS    = 0x0000L; // 0xFFFFL;
+    public static long SIMEVENT_DIGITAL_INPUTS = 0x0000L; // 0xFFFFL;
 
     /* flag indicating whether data should be inserted into the DB */
     // should be set to 'true' for production.
-    private static       boolean DFT_INSERT_EVENT           = true;
-    private static       boolean INSERT_EVENT               = DFT_INSERT_EVENT;
+    private static boolean DFT_INSERT_EVENT = true;
+    private static boolean INSERT_EVENT = DFT_INSERT_EVENT;
 
     /* update Device record */
     // (enable to update Device record with current IP address and last connect time)
-    private static       boolean UPDATE_DEVICE              = false;
-    
+    private static boolean UPDATE_DEVICE = false;
     /* minimum acceptable speed value */
     // Speeds below this value should be considered 'stopped'
-    public  static       double  MINIMUM_SPEED_KPH          = 0.0;
-
+    public static double MINIMUM_SPEED_KPH = 0.0;
     // ------------------------------------------------------------------------
 
     /* Ingore $GPRMC checksum? */
     // (only applicable for data formats that include NMEA-0183 formatted event records)
-    private static       boolean IGNORE_NMEA_CHECKSUM       = false;
-
+    private static boolean IGNORE_NMEA_CHECKSUM = false;
     // ------------------------------------------------------------------------
 
     /* GMT/UTC timezone */
-    private static final TimeZone gmtTimezone               = DateTime.getGMTTimeZone();
-
+    private static final TimeZone gmtTimezone = DateTime.getGMTTimeZone();
     // ------------------------------------------------------------------------
 
     /* GTS status codes for Input-On events */
-    private static final int InputStatusCodes_ON[] = new int[] {
+    private static final int InputStatusCodes_ON[] = new int[]{
         StatusCodes.STATUS_INPUT_ON_00,
         StatusCodes.STATUS_INPUT_ON_01,
         StatusCodes.STATUS_INPUT_ON_02,
@@ -194,7 +186,7 @@ public class TrackClientPacketHandler
     };
 
     /* GTS status codes for Input-Off events */
-    private static final int InputStatusCodes_OFF[] = new int[] {
+    private static final int InputStatusCodes_OFF[] = new int[]{
         StatusCodes.STATUS_INPUT_OFF_00,
         StatusCodes.STATUS_INPUT_OFF_01,
         StatusCodes.STATUS_INPUT_OFF_02,
@@ -212,7 +204,6 @@ public class TrackClientPacketHandler
         StatusCodes.STATUS_INPUT_OFF_14,
         StatusCodes.STATUS_INPUT_OFF_15
     };
-
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
 
@@ -221,23 +212,22 @@ public class TrackClientPacketHandler
     // session should be terminated.  For instance, if this server finishes communication
     // with the device or if parser finds a fatal error in the incoming data stream 
     // (ie. invalid account/device, or unrecognizable data).
-    private boolean         terminate                   = false;
+    private boolean terminate = false;
 
     /* duplex/simplex */
     // This value will be set for you by the incoming session to indicate whether
     // the session is TCP (duplex) or UDP (simplex).
-    private boolean         isDuplex                    = true;
+    private boolean isDuplex = true;
 
     /* session IP address */
     // These values will be set for you by the incoming session to indicate the 
     // originating IP address.
-    private InetAddress     inetAddress                 = null;
-    private String          ipAddress                   = null;
-    private int             clientPort                  = 0;
+    private InetAddress inetAddress = null;
+    private String ipAddress = null;
+    private int clientPort = 0;
 
     /* packet handler constructor */
-    public TrackClientPacketHandler() 
-    {
+    public TrackClientPacketHandler() {
         super();
     }
 
@@ -245,15 +235,14 @@ public class TrackClientPacketHandler
 
     /* callback when session is starting */
     // this method is called at the beginning of a communication session
-    public void sessionStarted(InetAddress inetAddr, boolean isTCP, boolean isText)
-    {
+    public void sessionStarted(InetAddress inetAddr, boolean isTCP, boolean isText) {
         super.sessionStarted(inetAddr, isTCP, isText);
 
         /* init */
-        this.inetAddress      = inetAddr;
-        this.ipAddress        = (inetAddr != null)? inetAddr.getHostAddress() : null;
-        this.clientPort       = this.getSessionInfo().getRemotePort();
-        this.isDuplex         = isTCP;
+        this.inetAddress = inetAddr;
+        this.ipAddress = (inetAddr != null) ? inetAddr.getHostAddress() : null;
+        this.clientPort = this.getSessionInfo().getRemotePort();
+        this.isDuplex = isTCP;
 
         /* debug message */
         if (this.isDuplex) {
@@ -263,36 +252,36 @@ public class TrackClientPacketHandler
         }
 
     }
-    
+
     /* callback when session is terminating */
     // this method is called at the end of a communication session
-    public void sessionTerminated(Throwable err, long readCount, long writeCount)
-    {
+    public void sessionTerminated(Throwable err, long readCount, long writeCount) {
 
         // called before the socket is closed
         if (this.isDuplex()) {
             Print.logInfo("End TCP communication: " + this.ipAddress);
             // short pause to 'help' make sure the pending outbound data is transmitted
-            try { Thread.sleep(50L); } catch (Throwable t) {}
+            try {
+                Thread.sleep(50L);
+            } catch (Throwable t) {
+            }
         } else {
             Print.logInfo("End UDP communication: " + this.ipAddress);
         }
 
     }
-    
+
     // ------------------------------------------------------------------------
 
     /* returns true if this session is duplex (ie TCP), false if simplex (ie UDP) */
-    public boolean isDuplex()
-    {
+    public boolean isDuplex() {
         return this.isDuplex;
     }
 
     // ------------------------------------------------------------------------
 
     /* based on the supplied packet data, return the remaining bytes to read in the packet */
-    public int getActualPacketLength(byte packet[], int packetLen)
-    {
+    public int getActualPacketLength(byte packet[], int packetLen) {
         // (This method is only called if "Constants.ASCII_PACKETS" is false!)
         //
         // This method is possibly the most important part of a server protocol implementation.
@@ -348,22 +337,20 @@ public class TrackClientPacketHandler
             // BINARY packet - need to analyze 'packet[]' and determine actual packet length
             return ServerSocketThread.PACKET_LEN_ASCII_LINE_TERMINATOR; // <-- change this for binary packets
         }
-        
+
     }
 
     // ------------------------------------------------------------------------
 
     /* set session terminate after next packet handling */
-    private void setTerminate()
-    {
+    private void setTerminate() {
         this.terminate = true;
     }
-    
+
     /* indicate that the session should terminate */
     // This method is called after each return from "getHandlePacket" to check to see
     // the current session should be closed.
-    public boolean terminateSession()
-    {
+    public boolean terminateSession() {
         return this.terminate;
     }
 
@@ -371,9 +358,8 @@ public class TrackClientPacketHandler
     // ------------------------------------------------------------------------
 
     /* return the initial packet sent to the device after session is open */
-    public byte[] getInitialPacket() 
-        throws Exception
-    {
+    public byte[] getInitialPacket()
+            throws Exception {
         // At this point a connection from the client to the server has just been
         // initiated, and we have not yet received any data from the client.
         // If the client is expecting to receive an initial packet from the server at
@@ -385,8 +371,7 @@ public class TrackClientPacketHandler
     }
 
     /* workhorse of the packet handler */
-    public byte[] getHandlePacket(byte pktBytes[]) 
-    {
+    public byte[] getHandlePacket(byte pktBytes[]) {
 
         // After determining the length of a client packet (see method 'getActualPacketLength'),
         // this method is called with the single packet which has been read from the client.
@@ -394,19 +379,27 @@ public class TrackClientPacketHandler
         // from the client, parse/insert any event data into the tables, and return any expected 
         // response that the client may be expected in the form of a byte array.
         if ((pktBytes != null) && (pktBytes.length > 0)) {
-            
+
             /* (debug message) display received data packet */
 //            Print.logInfo("Recv[HEX]: " + StringTools.toHexString(pktBytes));
             String s = StringTools.toStringValue(pktBytes).trim(); // remove leading/trailing spaces
 //            Print.logInfo("Recv[TXT]: " + s); // debug message
-            
+
             /* parse/insert event */
             byte rtn[] = null;
             switch (DATA_FORMAT_OPTION) {
-                case 1 : rtn = this.parseInsertRecord_ASCII_1(s); break;
-                case 2 : rtn = this.parseInsertRecord_ASCII_2(s); break;
-                case 3 : rtn = this.parseInsertRecord_RTProps(s); break;
-                default: Print.logError("Unspecified data format"); break;
+                case 1:
+                    rtn = this.parseInsertRecord_ASCII_1(s);
+                    break;
+                case 2:
+                    rtn = this.parseInsertRecord_ASCII_2(s);
+                    break;
+                case 3:
+                    rtn = this.parseInsertRecord_RTProps(s);
+                    break;
+                default:
+                    Print.logError("Unspecified data format");
+                    break;
             }
             // Note:
             // The above examples assume ASCII data.  If the data arrives as a binary data packet,
@@ -445,28 +438,26 @@ public class TrackClientPacketHandler
     }
 
     /* final packet sent to device before session is closed */
-    public byte[] getFinalPacket(boolean hasError) 
-        throws Exception
-    {
+    public byte[] getFinalPacket(boolean hasError)
+            throws Exception {
         // If the server wishes to send a final packet to the client just before the connection
         // is closed, then this is where the server should compose the final packet, and return
         // this packet in the form of a byte array.  This byte array will then be transmitted
         // to the client device before the session is closed.
         return null;
     }
-    
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
 
     /* parse and insert data record */
-    private byte[] parseInsertRecord_ASCII_1(String s)   
-    {
+    private byte[] parseInsertRecord_ASCII_1(String s) {
         // This is an example showing how the server might parse one type of ASCII encoded data.
         // Since every device utilizes a different data format, this will likely not match the
         // format coming from your chosen device and may need some significant changes to support
         // the format provided by your device (assuming that the format is even ASCII).
-        
+
         // This parsing method assumes the data format appears as follows:
         //      0             1        2       3         4       5     6  
         // <IMEI number>,2006/09/05,07:47:26,35.3640,-141.2958,27.0,224.8
@@ -478,27 +469,27 @@ public class TrackClientPacketHandler
         //   5 - Speed (kph)
         //   6 - Heading (degrees)
 		/*
-		        0										1										2	3	4		5				6			7		8			9	10	  11	12	 13		
-		$$B0353358019462410|AA$GPRMC,102156.000,A,2232.4690,N,11403.6847,E,0.00,,180909,,*15|02.0|01.2|01.6|000000001010|20090918102156|14181353|00000000|279311AA|0000|0.7614|0080|D2B5
-
-/*
-
-Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) + GPRMC + | + PDOP + | + HDOP + | + VDOP + | + Status(12 Bytes) + | + RTC(14 Bytes) + | + Voltage(8 Bytes) + | + ADC(8 Bytes) + | + LACCI(8 Bytes) + | + Temperature(4 Bytes) | + Mile-meter (14 Bytes)+ | Serial(4 Bytes) + | + Checksum (4 Byte) + \r\n(2 Bytes)
-
+        0										1										2	3	4		5				6			7		8			9	10	  11	12	 13		
+        $$B0353358019462410|AA$GPRMC,102156.000,A,2232.4690,N,11403.6847,E,0.00,,180909,,*15|02.0|01.2|01.6|000000001010|20090918102156|14181353|00000000|279311AA|0000|0.7614|0080|D2B5
+        
+        /*
+        
+        Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) + GPRMC + | + PDOP + | + HDOP + | + VDOP + | + Status(12 Bytes) + | + RTC(14 Bytes) + | + Voltage(8 Bytes) + | + ADC(8 Bytes) + | + LACCI(8 Bytes) + | + Temperature(4 Bytes) | + Mile-meter (14 Bytes)+ | Serial(4 Bytes) + | + Checksum (4 Byte) + \r\n(2 Bytes)
+        
          * 0:  $$ 			:	2Bytes, indicates header of command from tracker unit to call centre, in ASCII						code (hex is 0x24).
-                B0				:	Len 2Bytes, indicates length of all command, including header and end (the array is first high to low).
-                353358019462410|             :	IMEI 15 Bytes, at most 20 bytes .
+        B0				:	Len 2Bytes, indicates length of all command, including header and end (the array is first high to low).
+        353358019462410|             :	IMEI 15 Bytes, at most 20 bytes .
          * 1:  AA			:	Alarm type 2Bytes, the GPRS data trigger type .
-                $GPRMC,			:	DATA GPRMC string
-                102156.000	,               :	hora utc 10:21:56:000
-                A,				: 	= Data status (A=Valid GPS position, V=navigation receiver warning) 
-                2232.4690,N,                :	Latitud
-                11403.6847,E,               :	Longitud
-                0.00,			:	Speed over ground in knot
-                ,				:	Direccion ?en grados con respecto al norte
-                180909,                     :	fecha en dia mes anno
-                ,,				:	?
-                *15|                        :	Cheksum
+        $GPRMC,			:	DATA GPRMC string
+        102156.000	,               :	hora utc 10:21:56:000
+        A,				: 	= Data status (A=Valid GPS position, V=navigation receiver warning) 
+        2232.4690,N,                :	Latitud
+        11403.6847,E,               :	Longitud
+        0.00,			:	Speed over ground in knot
+        ,				:	Direccion ?en grados con respecto al norte
+        180909,                     :	fecha en dia mes anno
+        ,,				:	?
+         *15|                        :	Cheksum
          * 2:  02.0|			:	PDOP
          * 3:  01.2|			:	HDOP
          * 4:  01.6|			:	VDOP
@@ -512,8 +503,8 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
          * 12: 0080|            	:	Serial(4 Bytes)
          * 13: D2B5			:	Checksum (4 Byte)
          * 14: \r\n(2 Bytes)    	:	fin de cadena
-*/
-		
+         */
+
 //        Print.logInfo("Parsear : " + s);
 
         /* pre-validate */
@@ -528,33 +519,60 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
             Print.logWarn("Numero invalido de campos");
             return null;
         }
-		/* parsear campo 0 , $$, tamanno e IMEI*/
-		//String   campo0		= fld[0].toLowerCase();
-		//String   accountID  = fld[0].toLowerCase();
-        String   IMEI   = fld[0].substring(4,fld[0].length());
+        /* parsear campo 0 , $$, tamanno e IMEI*/
+        //String   campo0		= fld[0].toLowerCase();
+        //String   accountID  = fld[0].toLowerCase();
+        String IMEI = fld[0].substring(4, fld[0].length());
         /* parse individual fields */
 
         /* parse individual fields */
-        Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), true);
+        Print.logWarn("s: " + s);
+        Print.logWarn("lala: " + fld[1]);
+        String iniGPS = fld[1].substring(2, 3);
+        Print.logWarn("iniGPS: " + iniGPS);
+        long fixtime;
+        int statusCode;
+        double latitude;
+        double longitude;
+        double speedKPH;
+        double heading;
+        double altitudeM = 0.0;  // 
+        String gprmcparcial;
+        String gprmccortado[];
+        String horautc;
+        String fechautc;
+        if (iniGPS.compareTo("$") == 0) {
+            Nmea0183 gprmc = new Nmea0183(fld[1].substring(2, fld[1].length() - 1), true);
+            fixtime = gprmc.getFixtime();
+            statusCode = StatusCodes.STATUS_LOCATION;
+            latitude = gprmc.getLatitude();
+            longitude = gprmc.getLongitude();
+            speedKPH = gprmc.getSpeedKPH();
+            heading = gprmc.getHeading();
+            gprmcparcial = fld[1].substring(2, fld[1].length() - 1);
+            gprmccortado = StringTools.parseString(gprmcparcial, ',');
+            horautc = gprmccortado[1];
+            fechautc = gprmccortado[9];
+        } else {
+            Print.logWarn("Sin señal GPS");
+            fixtime = 0x0;
+            latitude = 0.0;
+            longitude = 0.0;
+            speedKPH = 0.0;
+            heading = 0.0;
+            gprmcparcial = "";
+            gprmccortado = null;
+            horautc = "";
+            fechautc = "";
+        }
+            //       Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), IGNORE_NMEA_CHECKSUM);
 
- //       Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), IGNORE_NMEA_CHECKSUM);
-        long     fixtime    = gprmc.getFixtime();
-        int      statusCode = StatusCodes.STATUS_LOCATION;
-        double   latitude   = gprmc.getLatitude();
-        double   longitude  = gprmc.getLongitude();
-        double   speedKPH   = gprmc.getSpeedKPH();
-        double   heading    = gprmc.getHeading();
-        double   altitudeM  = 0.0;  // 
-        
-        String aa = fld[1].substring(0,2);
+        String aa = fld[1].substring(0, 2);
         String mileage = fld[11];
         String temp = fld[10];
         String sa = fld[5];
         String sd = fld[8];
-        String gprmcparcial=fld[1].substring(2,fld[1].length()-1);
-        String gprmccortado[] = StringTools.parseString(gprmcparcial, ',');
-        String horautc=gprmccortado[1];
-        String fechautc=gprmccortado[9];
+        
 
         /* no deviceID? */
         if (StringTools.isBlank(IMEI)) {
@@ -562,110 +580,71 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
             return null;
         }
 
+        String url = "http://localhost/backend/alerta.php?"
+                + "IMEI=" + IMEI + ""
+                + "&statusCode=61472&"
+                + "fixtime=" + fixtime + ""
+                + "&horautc=" + horautc + ""
+                + "&fechautc=" + fechautc + ""
+                + "&fechafullutc=" + fld[6] + ""
+                + "&latitude=" + latitude + ""
+                + "&longitude=" + longitude + ""
+                + "&gpsAge=0"
+                + "&speedKPH=" + speedKPH + ""
+                + "&heading=" + heading + ""
+                + "&altitude=" + altitudeM + ""
+                + "&distanceKM=0"
+                + "&odometerKM=" + mileage + ""
+                + "&aa=" + aa + ""
+                + "&temp=" + temp + ""
+                + "&sa=" + sa + ""
+                + "&sd=" + sd + ""
+                + "&rawData=" + s;
 
+        Print.logInfo("Enviando :" + url);
+        try {
+            lanzar(url);
+        } catch (MalformedURLException e) {
+            Print.logInfo(e.getMessage());
+        } catch (IOException e) {
+            Print.logInfo(e.getMessage());
+        }
+        return null;
 
-        
-        /* no modemID?
-        if (StringTools.isBlank(modemID)) {
-            Print.logWarn("ModemID not specified!");
-            return null;
-        } */
-
-        /* GPS Event */
-  //      GPSEvent gpsEvent = new GPSEvent(Main.getServerConfig(), 
-  //          this.ipAddress, this.clientPort, modemID);
-  //      Device device = gpsEvent.getDevice();
-   //     if (device == null) {
-            // errors already displayed
-   //         return null;
-    //    }
-     //   gpsEvent.setTimestamp(fixtime);
-     //   gpsEvent.setStatusCode(statusCode);
-     //  gpsEvent.setLatitude(latitude);
-     //   gpsEvent.setLongitude(longitude);
-     //   gpsEvent.setSpeedKPH(speedKPH);
-     //   gpsEvent.setHeading(heading);
-     //   gpsEvent.setAltitude(altitudeM);
-        
-        /* insert/return */
-     //   if (this.parseInsertRecord_Common(gpsEvent)) {
-            // change this to return any required acknowledgement (ACK) packets back to the device
-      //      return null;
-       // } else {
-        //    return null;
-       // }
-	   ///////////////////////////////lanzar linea
-	   String url="http://localhost/backend/alerta.php?"
-                   + "IMEI="+IMEI+""
-                   + "&statusCode=61472&"
-                   + "fixtime="+fixtime+""
-                   + "&horautc="+horautc+""
-                   + "&fechautc="+fechautc+""
-                   + "&latitude="+latitude+""
-                   + "&longitude="+longitude+""
-                   + "&gpsAge=0"
-                   + "&speedKPH="+speedKPH+""
-                   + "&heading="+heading+""
-                   + "&altitude="+altitudeM+""
-                   + "&distanceKM=0"
-                   + "&odometerKM="+mileage+""
-                   + "&aa="+aa+""
-                   + "&temp="+temp+""
-                   + "&sa="+sa+""
-                   + "&sd="+sd+""
-                   + "&rawData="+s;
-
-	   Print.logInfo("Enviando :"+url);
-	   try {
-			lanzar (url); 
-		}
-			    catch (MalformedURLException e)
-	   {
-			Print.logInfo(e.getMessage());
-	   }
-	   
-	   catch (IOException e)
-	   {
-			Print.logInfo(e.getMessage());
-	   }
-
-	   
-	return null;
-        
     }
-	
-	private void lanzar(String url1) throws MalformedURLException, IOException
-	{
-	
+
+    private void lanzar(String url1) throws MalformedURLException, IOException {
+
         URL url = new URL(url1);
         URLConnection con = url.openConnection();
 
         BufferedReader in = new BufferedReader(
-        new InputStreamReader(con.getInputStream()));
+                new InputStreamReader(con.getInputStream()));
         String linea;
         while ((linea = in.readLine()) != null) {
             System.out.println(linea);
-        }	   
-	}
+        }
+    }
 
     /* parse the specified date into unix 'epoch' time */
-    private long _parseDate(String ymd, String hms)
-    {
+    private long _parseDate(String ymd, String hms) {
         // "YYYY/MM/DD", "hh:mm:ss"
-        String d[] = StringTools.parseString(ymd,"/");
-        String t[] = StringTools.parseString(hms,":");
+        String d[] = StringTools.parseString(ymd, "/");
+        String t[] = StringTools.parseString(hms, ":");
         if ((d.length != 3) && (t.length != 3)) {
             //Print.logError("Invalid date: " + ymd + ", " + hms);
             return 0L;
         } else {
-            int YY = StringTools.parseInt(d[0],0); // 07 year
-            int MM = StringTools.parseInt(d[1],0); // 04 month
-            int DD = StringTools.parseInt(d[2],0); // 18 day
-            int hh = StringTools.parseInt(t[0],0); // 01 hour
-            int mm = StringTools.parseInt(t[1],0); // 48 minute
-            int ss = StringTools.parseInt(t[2],0); // 04 second
-            if (YY < 100) { YY += 2000; }
-            DateTime dt = new DateTime(gmtTimezone,YY,MM,DD,hh,mm,ss);
+            int YY = StringTools.parseInt(d[0], 0); // 07 year
+            int MM = StringTools.parseInt(d[1], 0); // 04 month
+            int DD = StringTools.parseInt(d[2], 0); // 18 day
+            int hh = StringTools.parseInt(t[0], 0); // 01 hour
+            int mm = StringTools.parseInt(t[1], 0); // 48 minute
+            int ss = StringTools.parseInt(t[2], 0); // 04 second
+            if (YY < 100) {
+                YY += 2000;
+            }
+            DateTime dt = new DateTime(gmtTimezone, YY, MM, DD, hh, mm, ss);
             return dt.getTimeSec();
         }
     }
@@ -674,10 +653,9 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
     // ------------------------------------------------------------------------
 
     /* parse and insert data record (common) */
-    private boolean parseInsertRecord_Common(GPSEvent gpsEvent)
-    {
-        long fixtime    = gpsEvent.getTimestamp();
-        int  statusCode = gpsEvent.getStatusCode();
+    private boolean parseInsertRecord_Common(GPSEvent gpsEvent) {
+        long fixtime = gpsEvent.getTimestamp();
+        int statusCode = gpsEvent.getStatusCode();
 
         /* invalid date? */
         if (fixtime <= 0L) {
@@ -685,7 +663,7 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
             fixtime = DateTime.getCurrentTimeSec(); // default to now
             gpsEvent.setTimestamp(fixtime);
         }
-                
+
         /* valid lat/lon? */
         if (!gpsEvent.isValidGeoPoint()) {
             Print.logWarn("Invalid GPRMC lat/lon: " + gpsEvent.getLatitude() + "/" + gpsEvent.getLongitude());
@@ -704,9 +682,9 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         Device device = gpsEvent.getDevice();
         double odomKM = 0.0; // set to available odometer from event record
         if (odomKM <= 0.0) {
-            odomKM = (ESTIMATE_ODOMETER && geoPoint.isValid())? 
-                device.getNextOdometerKM(geoPoint) : 
-                device.getLastOdometerKM();
+            odomKM = (ESTIMATE_ODOMETER && geoPoint.isValid())
+                    ? device.getNextOdometerKM(geoPoint)
+                    : device.getLastOdometerKM();
         } else {
             odomKM = device.adjustOdometerKM(odomKM);
         }
@@ -736,10 +714,10 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
                         long m = 1L << b;
                         if ((chgMask & m) != 0L) {
                             // this bit changed
-                            int  inpCode = ((gpioInput & m) != 0L)? InputStatusCodes_ON[b] : InputStatusCodes_OFF[b];
+                            int inpCode = ((gpioInput & m) != 0L) ? InputStatusCodes_ON[b] : InputStatusCodes_OFF[b];
                             long inpTime = fixtime;
                             gpsEvent.insertEventData(inpTime, inpCode);
-                            Print.logInfo("GPIO : " + StatusCodes.GetDescription(inpCode,null));
+                            Print.logInfo("GPIO : " + StatusCodes.GetDescription(inpCode, null));
                         }
                     }
                 }
@@ -763,8 +741,7 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
     // ------------------------------------------------------------------------
 
     /* parse and insert data record */
-    private byte[] parseInsertRecord_ASCII_2(String s)
-    {
+    private byte[] parseInsertRecord_ASCII_2(String s) {
         // This is an example showing how the server might parse one type of ASCII encoded data.
         // Since every device utilizes a different data format, this will likely not match the
         // format coming from your chosen device and may need some significant changes to support
@@ -792,16 +769,16 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         }
 
         /* parse individual fields */
-        String   accountID  = fld[0].toLowerCase();
-        String   deviceID   = fld[1].toLowerCase();
-        Nmea0183 gprmc      = new Nmea0183(fld[2], IGNORE_NMEA_CHECKSUM);
-        long     fixtime    = gprmc.getFixtime();
-        int      statusCode = StatusCodes.STATUS_LOCATION;
-        double   latitude   = gprmc.getLatitude();
-        double   longitude  = gprmc.getLongitude();
-        double   speedKPH   = gprmc.getSpeedKPH();
-        double   heading    = gprmc.getHeading();
-        double   altitudeM  = 0.0;  // 
+        String accountID = fld[0].toLowerCase();
+        String deviceID = fld[1].toLowerCase();
+        Nmea0183 gprmc = new Nmea0183(fld[2], IGNORE_NMEA_CHECKSUM);
+        long fixtime = gprmc.getFixtime();
+        int statusCode = StatusCodes.STATUS_LOCATION;
+        double latitude = gprmc.getLatitude();
+        double longitude = gprmc.getLongitude();
+        double speedKPH = gprmc.getSpeedKPH();
+        double heading = gprmc.getHeading();
+        double altitudeM = 0.0;  // 
 
         /* no deviceID? */
         if (StringTools.isBlank(deviceID)) {
@@ -810,8 +787,8 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         }
 
         /* GPS Event */
-        GPSEvent gpsEvent = new GPSEvent(Main.getServerConfig(), 
-            this.ipAddress, this.clientPort, accountID, deviceID);
+        GPSEvent gpsEvent = new GPSEvent(Main.getServerConfig(),
+                this.ipAddress, this.clientPort, accountID, deviceID);
         Device device = gpsEvent.getDevice();
         if (device == null) {
             // errors already displayed
@@ -834,31 +811,28 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         }
 
     }
-    
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    
-    private static String RTP_ACCOUNT[]     = new String[] { "acct" , "accountid"    };
-    private static String RTP_DEVICE[]      = new String[] { "dev"  , "deviceid"     };
-    private static String RTP_MODEMID[]     = new String[] { "mid"  , "modemid"      , "uniqueid"    , "imei" };
-    private static String RTP_TIMESTAMP[]   = new String[] { "ts"   , "timestamp"    , "time"        };
-    private static String RTP_STATUSCODE[]  = new String[] { "code" , "statusCode"   };
-    private static String RTP_GEOPOINT[]    = new String[] { "gps"  , "geopoint"     };
-    private static String RTP_GPSAGE[]      = new String[] { "age"  , "gpsAge"       };
-    private static String RTP_SATCOUNT[]    = new String[] { "sats" , "satCount"     };
-    private static String RTP_SPEED[]       = new String[] { "kph"  , "speed"        , "speedKph"    };
-    private static String RTP_HEADING[]     = new String[] { "dir"  , "heading"      };
-    private static String RTP_ALTITUDE[]    = new String[] { "alt"  , "altm"         , "altitude"    };
-    private static String RTP_ODOMETER[]    = new String[] { "odom" , "odometer"     };
-    private static String RTP_INPUTMASK[]   = new String[] { "gpio" , "inputMask"    };
-    private static String RTP_SERVERID[]    = new String[] { "dcs"  , "serverid"     };
-    private static String RTP_ACK[]         = new String[] { "ack"  };
-    private static String RTP_NAK[]         = new String[] { "nak"  };
+    private static String RTP_ACCOUNT[] = new String[]{"acct", "accountid"};
+    private static String RTP_DEVICE[] = new String[]{"dev", "deviceid"};
+    private static String RTP_MODEMID[] = new String[]{"mid", "modemid", "uniqueid", "imei"};
+    private static String RTP_TIMESTAMP[] = new String[]{"ts", "timestamp", "time"};
+    private static String RTP_STATUSCODE[] = new String[]{"code", "statusCode"};
+    private static String RTP_GEOPOINT[] = new String[]{"gps", "geopoint"};
+    private static String RTP_GPSAGE[] = new String[]{"age", "gpsAge"};
+    private static String RTP_SATCOUNT[] = new String[]{"sats", "satCount"};
+    private static String RTP_SPEED[] = new String[]{"kph", "speed", "speedKph"};
+    private static String RTP_HEADING[] = new String[]{"dir", "heading"};
+    private static String RTP_ALTITUDE[] = new String[]{"alt", "altm", "altitude"};
+    private static String RTP_ODOMETER[] = new String[]{"odom", "odometer"};
+    private static String RTP_INPUTMASK[] = new String[]{"gpio", "inputMask"};
+    private static String RTP_SERVERID[] = new String[]{"dcs", "serverid"};
+    private static String RTP_ACK[] = new String[]{"ack"};
+    private static String RTP_NAK[] = new String[]{"nak"};
 
     /* parse and insert data record */
-    private byte[] parseInsertRecord_RTProps(String s)
-    {
+    private byte[] parseInsertRecord_RTProps(String s) {
         // This is an example showing how another parsing server might transfer data to this
         // server, using the following simple (and extensible) format:
         //   mid=123456789012345 ts=1254100914 code=0xF020 gps=39.1234/-142.1234 kph=45.6 dir=123 alt=1234 odom=1234.5
@@ -887,67 +861,64 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
 
         /* parse */
         RTProperties rtp = new RTProperties(s);
-        String   accountID  = rtp.getString(RTP_ACCOUNT,   null);
-        String   deviceID   = rtp.getString(RTP_DEVICE,    null);
-        String   mobileID   = rtp.getString(RTP_MODEMID,   null);
-        long     fixtime    = rtp.getLong(  RTP_TIMESTAMP, 0L);
-        int      statusCode = rtp.getInt(   RTP_STATUSCODE,StatusCodes.STATUS_LOCATION);
-        String   gpsStr     = rtp.getString(RTP_GEOPOINT,  null);
-        long     gpsAge     = rtp.getLong(  RTP_GPSAGE,    0L);
-        int      satCount   = rtp.getInt(   RTP_SATCOUNT,  0);
-        double   speedKPH   = rtp.getDouble(RTP_SPEED,     0.0);
-        double   heading    = rtp.getDouble(RTP_HEADING,   0.0);
-        double   altitudeM  = rtp.getDouble(RTP_ALTITUDE,  0.0);
-        double   odomKM     = rtp.getDouble(RTP_ODOMETER,  0.0);
-        long     gpioInput  = rtp.getLong(  RTP_INPUTMASK, -1L);
-        String   dcsid      = rtp.getString(RTP_SERVERID,  null);
-        String   ack        = rtp.getString(RTP_ACK,       null);
-        String   nak        = rtp.getString(RTP_NAK,       null);
-        GeoPoint geoPoint   = new GeoPoint(gpsStr);
+        String accountID = rtp.getString(RTP_ACCOUNT, null);
+        String deviceID = rtp.getString(RTP_DEVICE, null);
+        String mobileID = rtp.getString(RTP_MODEMID, null);
+        long fixtime = rtp.getLong(RTP_TIMESTAMP, 0L);
+        int statusCode = rtp.getInt(RTP_STATUSCODE, StatusCodes.STATUS_LOCATION);
+        String gpsStr = rtp.getString(RTP_GEOPOINT, null);
+        long gpsAge = rtp.getLong(RTP_GPSAGE, 0L);
+        int satCount = rtp.getInt(RTP_SATCOUNT, 0);
+        double speedKPH = rtp.getDouble(RTP_SPEED, 0.0);
+        double heading = rtp.getDouble(RTP_HEADING, 0.0);
+        double altitudeM = rtp.getDouble(RTP_ALTITUDE, 0.0);
+        double odomKM = rtp.getDouble(RTP_ODOMETER, 0.0);
+        long gpioInput = rtp.getLong(RTP_INPUTMASK, -1L);
+        String dcsid = rtp.getString(RTP_SERVERID, null);
+        String ack = rtp.getString(RTP_ACK, null);
+        String nak = rtp.getString(RTP_NAK, null);
+        GeoPoint geoPoint = new GeoPoint(gpsStr);
 
         /* no mobileID? */
         if (StringTools.isBlank(mobileID)) {
             Print.logError("UniqueID/ModemID not specified!");
-            return (nak != null)? (nak+"\n").getBytes() : null;
+            return (nak != null) ? (nak + "\n").getBytes() : null;
         }
-        
+
         /* DCServer */
-        String dcsName = !StringTools.isBlank(dcsid)? dcsid : Main.getServerName();
+        String dcsName = !StringTools.isBlank(dcsid) ? dcsid : Main.getServerName();
         DCServerConfig dcserver = DCServerFactory.getServerConfig(dcsName);
         if (dcserver == null) {
             Print.logWarn("DCServer name not registered: " + dcsName);
         }
-        
+
         /* validate IDs */
         boolean hasAcctDevID = false;
         if (!StringTools.isBlank(accountID)) {
             if (StringTools.isBlank(deviceID)) {
                 Print.logError("'deviceid' required if 'accountid' specified");
-                return (nak != null)? (nak+"\n").getBytes() : null;
-            } else
-            if (!StringTools.isBlank(mobileID)) {
+                return (nak != null) ? (nak + "\n").getBytes() : null;
+            } else if (!StringTools.isBlank(mobileID)) {
                 Print.logError("'mobileID' not allowed if 'accountid' specified");
-                return (nak != null)? (nak+"\n").getBytes() : null;
+                return (nak != null) ? (nak + "\n").getBytes() : null;
             }
             hasAcctDevID = true;
-        } else
-        if (!StringTools.isBlank(deviceID)) {
+        } else if (!StringTools.isBlank(deviceID)) {
             Print.logError("'accountid' required if 'deviceid' specified");
-            return (nak != null)? (nak+"\n").getBytes() : null;
-        } else
-        if (StringTools.isBlank(mobileID)) {
+            return (nak != null) ? (nak + "\n").getBytes() : null;
+        } else if (StringTools.isBlank(mobileID)) {
             Print.logError("'mobileID' not specified");
-            return (nak != null)? (nak+"\n").getBytes() : null;
+            return (nak != null) ? (nak + "\n").getBytes() : null;
         }
-        
+
         /* GPS Event */
-        GPSEvent gpsEvent = hasAcctDevID?
-            new GPSEvent(dcserver, this.ipAddress, this.clientPort, accountID, deviceID) :
-            new GPSEvent(dcserver, this.ipAddress, this.clientPort, mobileID);
+        GPSEvent gpsEvent = hasAcctDevID
+                ? new GPSEvent(dcserver, this.ipAddress, this.clientPort, accountID, deviceID)
+                : new GPSEvent(dcserver, this.ipAddress, this.clientPort, mobileID);
         Device device = gpsEvent.getDevice();
         if (device == null) {
             // errors already displayed
-            return (nak != null)? (nak+"\n").getBytes() : null;
+            return (nak != null) ? (nak + "\n").getBytes() : null;
         }
         gpsEvent.setTimestamp(fixtime);
         gpsEvent.setStatusCode(statusCode);
@@ -958,13 +929,15 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         gpsEvent.setHeading(heading);
         gpsEvent.setAltitude(altitudeM);
         gpsEvent.setOdometerKM(odomKM);
-        if (gpioInput >= 0L) { gpsEvent.setInputMask(gpioInput); }
+        if (gpioInput >= 0L) {
+            gpsEvent.setInputMask(gpioInput);
+        }
 
         /* insert/return */
         if (this.parseInsertRecord_Common(gpsEvent)) {
-            return (ack != null)? (ack+"\n").getBytes() : null;
+            return (ack != null) ? (ack + "\n").getBytes() : null;
         } else {
-            return (nak != null)? (nak+"\n").getBytes() : null;
+            return (nak != null) ? (nak + "\n").getBytes() : null;
         }
 
     }
@@ -973,21 +946,20 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
     // ------------------------------------------------------------------------
 
     /* initialize runtime config */
-    public static void configInit() 
-    {
-        DCServerConfig dcsc     = Main.getServerConfig();
+    public static void configInit() {
+        DCServerConfig dcsc = Main.getServerConfig();
         if (dcsc == null) {
             Print.logWarn("DCServer not found: " + Main.getServerName());
             return;
         }
 
         /* custom */
-        DATA_FORMAT_OPTION      = dcsc.getIntProperty(Main.ARG_FORMAT, DATA_FORMAT_OPTION);
+        DATA_FORMAT_OPTION = dcsc.getIntProperty(Main.ARG_FORMAT, DATA_FORMAT_OPTION);
 
         /* common */
-        MINIMUM_SPEED_KPH       = dcsc.getMinimumSpeedKPH(MINIMUM_SPEED_KPH);
-        ESTIMATE_ODOMETER       = dcsc.getEstimateOdometer(ESTIMATE_ODOMETER);
-        SIMEVENT_GEOZONES       = dcsc.getSimulateGeozones(SIMEVENT_GEOZONES);
+        MINIMUM_SPEED_KPH = dcsc.getMinimumSpeedKPH(MINIMUM_SPEED_KPH);
+        ESTIMATE_ODOMETER = dcsc.getEstimateOdometer(ESTIMATE_ODOMETER);
+        SIMEVENT_GEOZONES = dcsc.getSimulateGeozones(SIMEVENT_GEOZONES);
         SIMEVENT_DIGITAL_INPUTS = dcsc.getSimulateDigitalInputs(SIMEVENT_DIGITAL_INPUTS) & 0xFFFFL;
 
     }
@@ -1005,9 +977,7 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
     //   -format=[1|2]           Data format
     //   -debug                  Parse internal sample data
     //   -parseFile=<file>       Parse data from specified file
-
-    private static int _usage()
-    {
+    private static int _usage() {
         String cn = StringTools.className(TrackClientPacketHandler.class);
         Print.sysPrintln("Test/Load Device Communication Server");
         Print.sysPrintln("Usage:");
@@ -1021,8 +991,7 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
     }
 
     /* debug entry point (does not return) */
-    public static int _main(boolean fromMain)
-    {
+    public static int _main(boolean fromMain) {
 
         /* default options */
         INSERT_EVENT = RTConfig.getBoolean(Main.ARG_INSERT, DFT_INSERT_EVENT);
@@ -1034,19 +1003,23 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         TrackClientPacketHandler tcph = new TrackClientPacketHandler();
 
         /* DEBUG sample data */
-        if (RTConfig.getBoolean(Main.ARG_DEBUG,false)) {
+        if (RTConfig.getBoolean(Main.ARG_DEBUG, false)) {
             String data[] = null;
             switch (DATA_FORMAT_OPTION) {
-                case  1: data = new String[] {
-                    "123456789012345,2006/09/05,07:47:26,35.3640,-142.2958,27.0,224.8",
-                }; break;
-                case  2: data = new String[] {
-                    "account/device/$GPRMC,025423.494,A,3709.0642,N,14207.8315,W,12.09,108.52,200505,,*2E",
-                    "/device/$GPRMC,025423.494,A,3709.0642,N,14207.8315,W,12.09,108.52,200505,,*2E",
-                }; break;
-                case  3: data = new String[] {
-                    "mid=123456789012345 lat=39.12345 lon=-1421.2345 kph=123.0"
-                }; break;
+                case 1:
+                    data = new String[]{
+                        "123456789012345,2006/09/05,07:47:26,35.3640,-142.2958,27.0,224.8",};
+                    break;
+                case 2:
+                    data = new String[]{
+                        "account/device/$GPRMC,025423.494,A,3709.0642,N,14207.8315,W,12.09,108.52,200505,,*2E",
+                        "/device/$GPRMC,025423.494,A,3709.0642,N,14207.8315,W,12.09,108.52,200505,,*2E",};
+                    break;
+                case 3:
+                    data = new String[]{
+                        "mid=123456789012345 lat=39.12345 lon=-1421.2345 kph=123.0"
+                    };
+                    break;
                 default:
                     Print.sysPrintln("Unrecognized Data Format: %d", DATA_FORMAT_OPTION);
                     return _usage();
@@ -1061,7 +1034,7 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         if (RTConfig.hasProperty(Main.ARG_PARSEFILE)) {
 
             /* get input file */
-            File parseFile = RTConfig.getFile(Main.ARG_PARSEFILE,null);
+            File parseFile = RTConfig.getFile(Main.ARG_PARSEFILE, null);
             if ((parseFile == null) || !parseFile.isFile()) {
                 Print.sysPrintln("Data source file not specified, or does not exist.");
                 return _usage();
@@ -1091,7 +1064,11 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
             } catch (IOException ioe) {
                 Print.logException("Error reaading input file: " + parseFile, ioe);
             } finally {
-                try { fis.close(); } catch (Throwable th) {/* ignore */}
+                try {
+                    fis.close();
+                } catch (Throwable th) {/* ignore */
+
+                }
             }
 
             /* done */
@@ -1103,13 +1080,11 @@ Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) +
         return _usage();
 
     }
-    
+
     /* debug entry point */
-    public static void main(String argv[])
-    {
-        DBConfig.cmdLineInit(argv,false);
+    public static void main(String argv[]) {
+        DBConfig.cmdLineInit(argv, false);
         TrackClientPacketHandler.configInit();
         System.exit(TrackClientPacketHandler._main(false));
     }
-    
 }
