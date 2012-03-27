@@ -524,12 +524,12 @@ public class TrackClientPacketHandler
         //String   accountID  = fld[0].toLowerCase();
         String IMEI = fld[0].substring(4, fld[0].length());
         /* parse individual fields */
-
+        Print.logInfo("Largo cadena :" + s.length());
         /* parse individual fields */
-        Print.logWarn("s: " + s);
-        Print.logWarn("lala: " + fld[1]);
+//        Print.logWarn("s: " + s);
+//        Print.logWarn("lala: " + fld[1]);
         String iniGPS = fld[1].substring(2, 3);
-        Print.logWarn("iniGPS: " + iniGPS);
+//        Print.logWarn("iniGPS: " + iniGPS);
         long fixtime;
         int statusCode;
         double latitude;
