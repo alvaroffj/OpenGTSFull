@@ -40,13 +40,13 @@ public class Constants
 
     /* title */
     // Displayed at server startup
-    public static final String  TITLE_NAME              = "Template Example Device Parsing Module";
-    public static final String  VERSION                 = "0.2.3";
+    public static final String  TITLE_NAME              = "GTX Device Parsing Module";
+    public static final String  VERSION                 = "0.1";
     public static final String  COPYRIGHT               = Version.getCopyright();
 
     // ------------------------------------------------------------------------
 
-    public static final String  DEVICE_CODE             = DCServerFactory.TEMPLATE_NAME;
+    public static final String  DEVICE_CODE             = DCServerFactory.GTX_NAME;
 
     // ------------------------------------------------------------------------
 
