@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no' ?>
 <!DOCTYPE ReportDefinition SYSTEM "dcservers.dtd" >
 
-<!-- 
+<!--
   =======================================================================================
   Project: OpenGTS - Open GPS Tracking System
   URL    : http://www.opengts.org
@@ -13,14 +13,14 @@
   =======================================================================================
 -->
 
-<!-- 
+<!--
   =======================================================================================
   DCServerConfig tag attributes:
     "bindAddress" - the IP address (or host) interface to which these servers will "bind"
        Typically only necessary if this computer has more than one network interface.
        If this value is blank, then the server will bind to all network interfaces.
-    "backlog" - The maximum queue length for incoming connection indications (a request to 
-       connect) is set to this backlog value.  If a connection indication arrives when the 
+    "backlog" - The maximum queue length for incoming connection indications (a request to
+       connect) is set to this backlog value.  If a connection indication arrives when the
        queue is full, the connection is refused.  (see "java.net.ServerSocket")
     "portOffset" - An offset value to add to the specified ports before setting up the
        port 'listeners'.  This value should typically remain '0'.
@@ -64,13 +64,13 @@
         <Description><![CDATA[
             Example Template Server
             ]]></Description>
-       <ListenPorts 
-            tcpPort="31200" 
+       <ListenPorts
+            tcpPort="31200"
             udpPort="31200"
             />
         <Properties>
-            <Property key="parseFormat">1</Property>               
-            <Property key="minimumSpeedKPH">4.0</Property>        
+            <Property key="parseFormat">1</Property>
+            <Property key="minimumSpeedKPH">4.0</Property>
             <!-- <Property key="estimateOdometer">true</Property>       -->
             <!-- <Property key="simulateGeozones">true</Property>       -->
             <!-- <Property key="simulateDigitalInputs">0xFF</Property>  -->
@@ -78,18 +78,18 @@
     </DCServer>
 
     <!-- ================================================================================ -->
-    <DCServer name="GP6000">
+    <DCServer name="GTX">
         <Description><![CDATA[
-            GP6000 Server
+            GTX Server
             ]]></Description>
-       <ListenPorts 
-            tcpPort="31300" 
+       <ListenPorts
+            tcpPort="31300"
             udpPort="31300"
             />
         <Properties>
-            <Property key="parseFormat">1</Property>               
-            <Property key="minimumSpeedKPH">4.0</Property>     
-            <Property key="packetLenEndOfStream">true</Property>
+            <Property key="parseFormat">1</Property>
+            <Property key="minimumSpeedKPH">4.0</Property>
+            <!-- <Property key="packetLenEndOfStream">true</Property> -->
             <!-- <Property key="estimateOdometer">true</Property>       -->
             <!-- <Property key="simulateGeozones">true</Property>       -->
             <!-- <Property key="simulateDigitalInputs">0xFF</Property>  -->
@@ -101,8 +101,8 @@
         <Description><![CDATA[
             OpenDMTP
             ]]></Description>
-        <ListenPorts 
-            tcpPort="31000" 
+        <ListenPorts
+            tcpPort="31000"
             udpPort="31000"
             />
         <Properties>
@@ -123,8 +123,8 @@
             imei_
             *
             ]]></UniqueIDPrefix>
-        <ListenPorts 
-            tcpPort="31265" 
+        <ListenPorts
+            tcpPort="31265"
             udpPort="31265"
             />
         <Properties>
@@ -154,8 +154,8 @@
             imei_
             *
             ]]></UniqueIDPrefix>
-        <ListenPorts 
-            tcpPort="31260" 
+        <ListenPorts
+            tcpPort="31260"
             udpPort="31260"
             />
         <Properties>
@@ -172,8 +172,8 @@
             imei_
             *
             ]]></UniqueIDPrefix>
-        <ListenPorts 
-            tcpPort="31270" 
+        <ListenPorts
+            tcpPort="31270"
             udpPort="31270"
             />
         <Properties>
@@ -181,7 +181,7 @@
     </DCServer>
 
     <!-- ================================================================================ -->
-    
+
     <DCServer name="taip">
         <Description><![CDATA[
             TAIP (Trimble ASCII Interface Protocol)
@@ -189,8 +189,8 @@
         <UniqueIDPrefix><![CDATA[
             taip_
             ]]></UniqueIDPrefix>
-        <ListenPorts 
-            tcpPort="31275" 
+        <ListenPorts
+            tcpPort="31275"
             udpPort="31275"
             />
         <EventCodeMap enabled="false">
@@ -210,4 +210,3 @@
     <!-- ================================================================================ -->
 
 </DCServerConfig>
-
