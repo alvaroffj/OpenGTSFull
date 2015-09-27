@@ -476,7 +476,10 @@ public class TrackClientPacketHandler
 
          */
 
-//        Print.logInfo("Parsear : " + s);
+       Print.logInfo("Parsear: " + s);
+       String a = StringTools.parseHexAscii(s);
+
+       Print.logInfo("Parsear: " + a);
 
         /* pre-validate */
         if (s == null) {
@@ -487,7 +490,7 @@ public class TrackClientPacketHandler
         /* parse to fields */
         String fld[] = StringTools.parseString(s, '|');
         if ((fld == null) || (fld.length < 14)) {
-            Print.logWarn("Numero invalido de campos: " + s);
+            Print.logWarn("Numero invalido de campos: ");
             return null;
         }
         /* parsear campo 0 , $$, tamanno e IMEI*/
