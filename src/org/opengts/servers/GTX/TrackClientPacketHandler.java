@@ -474,35 +474,6 @@ public class TrackClientPacketHandler
 
         /*
 
-        Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) + GPRMC + | + PDOP + | + HDOP + | + VDOP + | + Status(12 Bytes) + | + RTC(14 Bytes) + | + Voltage(8 Bytes) + | + ADC(8 Bytes) + | + LACCI(8 Bytes) + | + Temperature(4 Bytes) | + Mile-meter (14 Bytes)+ | Serial(4 Bytes) + | + Checksum (4 Byte) + \r\n(2 Bytes)
-
-         * 0:  $$ 			:	2Bytes, indicates header of command from tracker unit to call centre, in ASCII						code (hex is 0x24).
-        B0				:	Len 2Bytes, indicates length of all command, including header and end (the array is first high to low).
-        353358019462410|             :	IMEI 15 Bytes, at most 20 bytes .
-         * 1:  AA			:	Alarm type 2Bytes, the GPRS data trigger type .
-        $GPRMC,			:	DATA GPRMC string
-        102156.000	,               :	hora utc 10:21:56:000
-        A,				: 	= Data status (A=Valid GPS position, V=navigation receiver warning)
-        2232.4690,N,                :	Latitud
-        11403.6847,E,               :	Longitud
-        0.00,			:	Speed over ground in knot
-        ,				:	Direccion ?en grados con respecto al norte
-        180909,                     :	fecha en dia mes anno
-        ,,				:	?
-         *15|                        :	Cheksum
-         * 2:  02.0|			:	PDOP
-         * 3:  01.2|			:	HDOP
-         * 4:  01.6|			:	VDOP
-         * 5:  000000001010|            :	Status (12bytes) //sensores analogos
-         * 6:  20090918102156|          :	RTC (14bytes)
-         * 7:  14181353|		:	Voltage(8 Bytes)
-         * 8:  00000000|		:	ADC(8 Bytes) //sensores digitales
-         * 9:  279311AA|		:	LACCI(8 Bytes)
-         * 10: 0000|			:	Temperature(4 Bytes)
-         * 11: 0.7614|			:	Mile-meter (14 Bytes)
-         * 12: 0080|            	:	Serial(4 Bytes)
-         * 13: D2B5			:	Checksum (4 Byte)
-         * 14: \r\n(2 Bytes)    	:	fin de cadena
          */
 
 //        Print.logInfo("Parsear : " + s);
@@ -516,7 +487,7 @@ public class TrackClientPacketHandler
         /* parse to fields */
         String fld[] = StringTools.parseString(s, '|');
         if ((fld == null) || (fld.length < 14)) {
-            Print.logWarn("Numero invalido de campos");
+            Print.logWarn("Numero invalido de campos: " + s);
             return null;
         }
         /* parsear campo 0 , $$, tamanno e IMEI*/
