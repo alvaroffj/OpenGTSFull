@@ -554,7 +554,7 @@ public class TrackClientPacketHandler
             horautc = gprmccortado[1];
             fechautc = gprmccortado[9];
         } else {
-            Print.logWarn("Sin señal GPS");
+            Print.logWarn("Sin senal GPS");
             fixtime = 0x0;
             latitude = 0.0;
             longitude = 0.0;
