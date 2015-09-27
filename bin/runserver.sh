@@ -13,7 +13,7 @@
 #  Examples:
 #     % runserver.sh -s <server> -p 31000 -i
 # -----------------------------------------------------------------------------
-if [ "${GTS_HOME}" = "" ]; then 
+if [ "${GTS_HOME}" = "" ]; then
     echo "!!! ERROR: GTS_HOME not defined !!!"
     GTS_HOME=".";  # - default to current dir
     exit 99;
@@ -37,7 +37,7 @@ function usage() {
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-# --- 
+# ---
 TEST_EXISTS=0
 SERVER_NAME=""
 PORT=0
@@ -48,10 +48,10 @@ DEBUG=0
 
 # --- argument
 while [ $# -gt 0 ]; do
-    case "$1" in 
-    
+    case "$1" in
+
         # - display help and exit
-        "-h" | "-help") 
+        "-h" | "-help")
             usage
             ;;
 
@@ -65,17 +65,17 @@ while [ $# -gt 0 ]; do
             ;;
 
         # - specify server-id
-        "-s" | "-server") 
+        "-s" | "-server")
             SERVER_NAME=$2
             shift
             ;;
-        
+
         # - set explicit port
         "-p" | "-port")
             PORT=$2
             shift
             ;;
-        
+
         # - set explicit command port
         "-cp" | "-cmdport" | "-command" )
             CMDPORT=$2
@@ -86,7 +86,7 @@ while [ $# -gt 0 ]; do
         "-i" | "-interactive")
             INTERACTIVE=1
             ;;
-            
+
         # - debug mode
         "-debug" | "-debugMode" | "-verbose" )
             DEBUG=1
@@ -96,7 +96,7 @@ while [ $# -gt 0 ]; do
         "-kill")
             KILL_PROC=1
             ;;
-            
+
         # - skip remaining arguments
         "--" )
             shift
@@ -108,7 +108,7 @@ while [ $# -gt 0 ]; do
             echo "Invalid argument! [$1]"
             usage
             ;;
-            
+
     esac
     shift
 done
@@ -186,12 +186,12 @@ if [ $KILL_PROC -eq 1 ]; then
     exit 99
 fi
 
-# --- port 
+# --- port
 if [ $PORT -gt 0 ]; then
     ARGS="${ARGS} -${SERVER_NAME}.port=${PORT}"
 fi
 
-# --- command-port 
+# --- command-port
 if [ $CMDPORT -gt 0 ]; then
     ARGS="${ARGS} -${SERVER_NAME}.commandPort=${CMDPORT}"
 fi
