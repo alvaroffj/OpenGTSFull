@@ -1,4 +1,4 @@
-<!-- 
+<!--
 ===============================================================================
 Project: OpenGTS - Open GPS Tracking System
 URL    : http://www.opengts.org
@@ -37,19 +37,19 @@ File   : build.xml
     <fileset dir="${lib.home}">
         <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${catalina.home}"> 
+    <fileset dir="${catalina.home}">
         <!-- Tomcat 5.5.XX -->
         <include name="common/lib/*.jar"/>
         <!-- Tomcat 6.0.XX -->
         <include name="lib/*.jar"/>
     </fileset>
   </path>
-  
+
   <!-- ======================================================================== -->
   <!-- ======================================================================== -->
 
   <!-- Target: help -->
-  <target name="help" 
+  <target name="help"
     description="Clean/Build project">
     <echo message="clean    : Remove 'build' directory"/>
     <echo message="gtsdmtp  : Create OpenGTS DMTP server with the MySQL datastore"/>
@@ -62,37 +62,37 @@ File   : build.xml
   </target>
 
   <!-- Target: all -->
-  <target name="all" depends="clean,custom,compile" 
+  <target name="all" depends="clean,custom,compile"
     description="Clean/Build Server and all WAR files">
     <echo message="Build 'all' complete."/>
   </target>
 
   <!-- Target: clean -->
-  <target name="clean" 
+  <target name="clean"
     description="Clean build">
     <delete dir="${build.home}"/>
   </target>
 
   <!-- Target: compile -->
-  <target name="compile" depends="compile.base,compile.servers,compile.servlets" 
+  <target name="compile" depends="compile.base,compile.servers,compile.servlets"
     description="Build Server and all WAR files">
     <echo message="Libraries compiled ..."/>
   </target>
 
   <!-- Target: compile.base -->
-  <target name="compile.base" depends="gtsutils,gtsdb,optjars,tools,gtsdmtp" 
+  <target name="compile.base" depends="gtsutils,gtsdb,optjars,tools,gtsdmtp"
     description="Build Base Libraries">
     <echo message="Libraries compiled ..."/>
   </target>
 
   <!-- Target: compile.servers -->
-  <target name="compile.servers" depends="compile.base,gtsdmtp,icare,aspicore,sipgear,taip,template" 
+  <target name="compile.servers" depends="compile.base,gtsdmtp,icare,aspicore,sipgear,taip,template"
     description="Build Servers">
     <echo message="Servers compiled ..."/>
   </target>
 
   <!-- Target: compile.servlets -->
-  <target name="compile.servlets" depends="compile.base,track,events,mologogo,gc101,gprmc,gpsmapper" 
+  <target name="compile.servlets" depends="compile.base,track,events,mologogo,gc101,gprmc,gpsmapper"
     description="Build Servlet/War files">
     <echo message="Servlet/War file compiled ..."/>
   </target>
@@ -100,7 +100,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: tomcat "${catalina.home}" -->
-  <target name="tomcat" 
+  <target name="tomcat"
     description="Check for CATALINA_HOME environment variable">
     <fail unless="Env.CATALINA_HOME">
         CATALINA_HOME environment variable has not been defined.
@@ -112,7 +112,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: prepare (create build directories) -->
-  <target name="prepare" 
+  <target name="prepare"
     description="Prepare for compile">
     <mkdir dir="${build.home}"/>
     <mkdir dir="${build.lib}"/>
@@ -201,10 +201,10 @@ File   : build.xml
   </target>
 
   <!-- ======================================================================== -->
-  
+
   <!-- Target: gtsdmtp -->
   <target name="gtsdmtp.jar" depends="gtsdmtp"/>
-  <target name="gtsdmtp" depends="prepare,gtsdb" 
+  <target name="gtsdmtp" depends="prepare,gtsdb"
     description="Create 'gtsdmtp.jar'">
     <echo message="Creating 'gtsdmtp.jar' ..."/>
 
@@ -264,7 +264,7 @@ File   : build.xml
 
   <!-- Target: gtsdb.jar -->
   <target name="gtsdb.jar" depends="gtsdb"/>
-  <target name="gtsdb" depends="prepare,gtsutils,CompileTime.java" 
+  <target name="gtsdb" depends="prepare,gtsutils,CompileTime.java"
     description="Create 'gtsdb.jar'">
 
     <!-- compile GTS db -->
@@ -329,7 +329,7 @@ File   : build.xml
             <include name="org/opengts/extra/geocoder/geoinverso/*.properties"/>
         </fileset>
     </jar>
-    
+
     <!-- create version script file -->
     <copy todir="${build.lib}" verbose="false">
         <fileset dir="${basedir}/bin">
@@ -344,7 +344,7 @@ File   : build.xml
 
   <!-- Target: gtsutils.jar -->
   <target name="gtsutils.jar" depends="gtsutils"/>
-  <target name="gtsutils" depends="prepare" 
+  <target name="gtsutils" depends="prepare"
     description="Create 'gtsutils.jar'">
     <echo message="Creating gtsutils.jar ... "/>
 
@@ -445,7 +445,7 @@ File   : build.xml
 
   <!-- Target: wartools.jar -->
   <target name="wartools.jar" depends="wartools"/>
-  <target name="wartools" depends="tomcat,prepare,gtsdb" 
+  <target name="wartools" depends="tomcat,prepare,gtsdb"
     description="Create 'wartools.jar'">
     <echo message="Creating 'wartools.jar' ..."/>
     <property name="compile.war.classpath" refid="compile.war.classpath"/>
@@ -494,11 +494,11 @@ File   : build.xml
 
   <!-- Target: warmaps.jar -->
   <target name="warmaps.jar" depends="warmaps"/>
-  <target name="warmaps" depends="tomcat,prepare,gtsdb,wartools" 
+  <target name="warmaps" depends="tomcat,prepare,gtsdb,wartools"
     description="Create 'warmaps.jar'">
     <echo message="Creating 'warmaps.jar' ..."/>
     <property name="compile.war.classpath" refid="compile.war.classpath"/>
-    
+
     <!-- compile maps -->
     <javac srcdir="${src.gts}"
         includeAntRuntime="false"
@@ -532,13 +532,13 @@ File   : build.xml
   </target>
 
   <!-- ======================================================================== -->
-  
+
   <!-- track servlet build directory -->
   <property name="build.track" value="${build.home}/track"/>
 
   <!-- Target: track -->
-  <target name="track.all" depends="track"/> 
-  <target name="track" depends="track.compile,track.war" 
+  <target name="track.all" depends="track"/>
+  <target name="track" depends="track.compile,track.war"
     description="Compile/Create 'track.war'">
     <echo message="'track.war' created."/>
   </target>
@@ -626,7 +626,7 @@ File   : build.xml
   </target>
 
   <!-- Target: track.compile -->
-  <target name="track.compile" depends="tomcat,prepare,gtsdb,wartools,warmaps,track.prepare" 
+  <target name="track.compile" depends="tomcat,prepare,gtsdb,wartools,warmaps,track.prepare"
     description="Compile 'track.war' source">
     <echo message="Compiling 'track.war' servlet ..."/>
     <delete file="${build.home}/track.war"/>
@@ -661,7 +661,7 @@ File   : build.xml
   </target>
 
   <!-- Target: track.war -->
-  <target name="track.war" depends="track.prepare" 
+  <target name="track.war" depends="track.prepare"
     description="Create 'track.war' archive">
     <echo message="Creating 'track.war' archive ..."/>
     <delete file="${build.home}/track.war"/>
@@ -699,11 +699,11 @@ File   : build.xml
   </target>
 
   <!-- Target: track.deploy -->
-  <target name="track.deploy" depends="track.war" 
+  <target name="track.deploy" depends="track.war"
     description="Deploy 'track.war' to Tomcat">
     <echo message="Deploying 'track.war' to ${catalina.home}/webapps/${track.deployWar}"/>
-    <copy 
-        file="${build.home}/track.war" 
+    <copy
+        file="${build.home}/track.war"
         tofile="${catalina.home}/webapps/${track.deployWar}"
         overwrite="true"
         failonerror="true"
@@ -713,13 +713,13 @@ File   : build.xml
   </target>
 
   <!-- ======================================================================== -->
-  
+
   <!-- service servlet build directory -->
   <property name="build.service" value="${build.home}/service"/>
 
   <!-- Target: service -->
-  <target name="service.all" depends="service"/> 
-  <target name="service" depends="service.compile,service.war" 
+  <target name="service.all" depends="service"/>
+  <target name="service" depends="service.compile,service.war"
     description="Compile/Create 'service.war'">
     <echo message="'service.war' created."/>
   </target>
@@ -790,7 +790,7 @@ File   : build.xml
   </target>
 
   <!-- Target: service.compile -->
-  <target name="service.compile" depends="tomcat,prepare,gtsdb,wartools,service.prepare" 
+  <target name="service.compile" depends="tomcat,prepare,gtsdb,wartools,service.prepare"
     description="Compile 'service.war' source">
     <echo message="Compiling 'service.war' servlet ..."/>
     <delete file="${build.home}/service.war"/>
@@ -822,7 +822,7 @@ File   : build.xml
   </target>
 
   <!-- Target: service.war -->
-  <target name="service.war" depends="service.prepare" 
+  <target name="service.war" depends="service.prepare"
     description="Create 'service.war' archive">
     <echo message="Creating 'service.war' archive ..."/>
     <delete file="${build.home}/service.war"/>
@@ -838,7 +838,7 @@ File   : build.xml
             <include name="gtsdb.jar"/>
             <include name="wartools.jar"/>
             <include name="ruledb.jar"/>
-            <include name="ruletrack.jar"/>   
+            <include name="ruletrack.jar"/>
             <include name="bcrossdb.jar"/>
             <include name="bcrosstrack.jar"/>
             <include name="warmaps.jar"/>
@@ -858,14 +858,14 @@ File   : build.xml
   </target>
 
   <!-- Target: service.deploy -->
-  <target name="service.deploy" depends="service.war" 
+  <target name="service.deploy" depends="service.war"
     description="Deploy 'service.war' to Tomcat">
     <echo message="Deploying 'service.war' to ${catalina.home}/webapps/${service.deployWar}"/>
-    <copy 
-        file="${build.home}/service.war" 
+    <copy
+        file="${build.home}/service.war"
         tofile="${catalina.home}/webapps/${service.deployWar}"
-        overwrite="true" 
-        failonerror="true" 
+        overwrite="true"
+        failonerror="true"
         verbose="true"
         />
     <echo message="Deployed ${catalina.home}/webapps/${service.deployWar}"/>
@@ -877,14 +877,14 @@ File   : build.xml
   <property name="build.events" value="${build.home}/events"/>
 
   <!-- Target: events -->
-  <target name="events.all" depends="events"/> 
-  <target name="events" depends="events.compile,events.war" 
+  <target name="events.all" depends="events"/>
+  <target name="events" depends="events.compile,events.war"
     description="Compile/Create 'events.war'">
     <echo message="'events.war' created."/>
   </target>
 
   <!-- Target: events.compile -->
-  <target name="events.compile" depends="tomcat,prepare,gtsdb,wartools" 
+  <target name="events.compile" depends="tomcat,prepare,gtsdb,wartools"
     description="Compile 'events.war' source">
     <echo message="Compiling 'events.war' servlet ..."/>
     <delete file="${build.home}/events.war"/>
@@ -944,9 +944,9 @@ File   : build.xml
     </copy>
 
   </target>
-  
+
   <!-- Target: events.war -->
-  <target name="events.war" depends="" 
+  <target name="events.war" depends=""
     description="Create 'events.war' archive">
     <echo message="Creating 'events.war' file ..."/>
 
@@ -976,33 +976,33 @@ File   : build.xml
   </target>
 
   <!-- Target: events.deploy -->
-  <target name="events.deploy" depends="events.war" 
+  <target name="events.deploy" depends="events.war"
     description="Deploy 'events.war' to Tomcat">
     <echo message="Deploying 'events.war' to ${catalina.home}/webapps/${events.deployWar}"/>
-    <copy 
-        file="${build.home}/events.war" 
+    <copy
+        file="${build.home}/events.war"
         tofile="${catalina.home}/webapps/${events.deployWar}"
-        overwrite="true" 
-        failonerror="true" 
+        overwrite="true"
+        failonerror="true"
         verbose="true"
         />
     <echo message="Deployed ${catalina.home}/webapps/${events.deployWar}"/>
   </target>
 
   <!-- ======================================================================== -->
-  
+
   <!-- mologogo servlet build directory -->
   <property name="build.mologogo" value="${build.home}/mologogo"/>
 
   <!-- Target: mologogo -->
-  <target name="mologogo.all" depends="mologogo"/> 
-  <target name="mologogo" depends="mologogo.compile,mologogo.war" 
+  <target name="mologogo.all" depends="mologogo"/>
+  <target name="mologogo" depends="mologogo.compile,mologogo.war"
     description="Compile/Create 'mologogo.war'">
     <echo message="'mologogo.war' created."/>
   </target>
 
   <!-- Target: mologogo.compile -->
-  <target name="mologogo.compile" depends="tomcat,prepare,gtsdb,wartools" 
+  <target name="mologogo.compile" depends="tomcat,prepare,gtsdb,wartools"
     description="Compile 'mologogo.war' source">
     <echo message="Compiling 'mologogo.war' servlet ..."/>
     <delete file="${build.home}/mologogo.war"/>
@@ -1093,33 +1093,33 @@ File   : build.xml
   </target>
 
   <!-- Target: mologogo.deploy -->
-  <target name="mologogo.deploy" depends="mologogo.war" 
+  <target name="mologogo.deploy" depends="mologogo.war"
     description="Deploy 'mologogo.war' to Tomcat">
     <echo message="Deploying 'mologogo.war' to ${catalina.home}/webapps/${mologogo.deployWar}"/>
-    <copy 
-        file="${build.home}/mologogo.war" 
+    <copy
+        file="${build.home}/mologogo.war"
         tofile="${catalina.home}/webapps/${mologogo.deployWar}"
-        overwrite="true" 
-        failonerror="true" 
+        overwrite="true"
+        failonerror="true"
         verbose="true"
         />
     <echo message="Deployed ${catalina.home}/webapps/${mologogo.deployWar}"/>
   </target>
 
   <!-- ======================================================================== -->
-  
+
   <!-- GPRMC servlet build directory -->
   <property name="build.gprmc" value="${build.home}/gprmc"/>
 
   <!-- Target: gprmc -->
-  <target name="gprmc.all" depends="gprmc"/> 
-  <target name="gprmc" depends="gprmc.compile,gprmc.war" 
+  <target name="gprmc.all" depends="gprmc"/>
+  <target name="gprmc" depends="gprmc.compile,gprmc.war"
     description="Compile/Create 'gprmc.war'">
     <echo message="'gprmc.war' created."/>
   </target>
 
   <!-- Target: gprmc.compile -->
-  <target name="gprmc.compile" depends="tomcat,prepare,gtsdb,wartools" 
+  <target name="gprmc.compile" depends="tomcat,prepare,gtsdb,wartools"
     description="Compile 'gprmc.war' source">
     <echo message="Compiling 'gprmc.war' servlet ..."/>
     <delete file="${build.home}/gprmc.war"/>
@@ -1210,14 +1210,14 @@ File   : build.xml
   </target>
 
   <!-- Target: gprmc.deploy -->
-  <target name="gprmc.deploy" depends="gprmc.war" 
+  <target name="gprmc.deploy" depends="gprmc.war"
     description="Deploy 'gprmc.war' to Tomcat">
     <echo message="Deploying 'gprmc.war' to ${catalina.home}/webapps/${gprmc.deployWar}"/>
-    <copy 
-        file="${build.home}/gprmc.war" 
+    <copy
+        file="${build.home}/gprmc.war"
         tofile="${catalina.home}/webapps/${gprmc.deployWar}"
-        overwrite="true" 
-        failonerror="true" 
+        overwrite="true"
+        failonerror="true"
         verbose="true"
         />
     <echo message="Deployed ${catalina.home}/webapps/${gprmc.deployWar}"/>
@@ -1229,14 +1229,14 @@ File   : build.xml
   <property name="build.gc101" value="${build.home}/gc101"/>
 
   <!-- Target: gc101 -->
-  <target name="gc101.all" depends="gc101"/> 
-  <target name="gc101" depends="gc101.compile,gc101.war" 
+  <target name="gc101.all" depends="gc101"/>
+  <target name="gc101" depends="gc101.compile,gc101.war"
     description="Compile/Create 'gc101.war'">
     <echo message="'gc101.war' created."/>
   </target>
 
   <!-- Target: gc101.compile -->
-  <target name="gc101.compile" depends="tomcat,prepare,gtsdb,wartools" 
+  <target name="gc101.compile" depends="tomcat,prepare,gtsdb,wartools"
     description="Compile 'gc101.war' source">
     <echo message="Compiling 'gc101.war' servlet ..."/>
     <delete file="${build.home}/gc101.war"/>
@@ -1297,7 +1297,7 @@ File   : build.xml
   </target>
 
   <!-- Target: gc101.war -->
-  <target name="gc101.war" depends="" 
+  <target name="gc101.war" depends=""
     description="Create 'gc101.war' archive">
     <echo message="Creating 'gc101.war' archive ..."/>
     <delete file="${build.home}/gc101.war"/>
@@ -1327,33 +1327,33 @@ File   : build.xml
   </target>
 
   <!-- Target: gc101.deploy -->
-  <target name="gc101.deploy" depends="gc101.war" 
+  <target name="gc101.deploy" depends="gc101.war"
     description="Deploy 'gc101.war' to Tomcat">
     <echo message="Deploying 'gc101.war' to ${catalina.home}/webapps/${gc101.deployWar}"/>
-    <copy 
-        file="${build.home}/gc101.war" 
+    <copy
+        file="${build.home}/gc101.war"
         tofile="${catalina.home}/webapps/${gc101.deployWar}"
-        overwrite="true" 
-        failonerror="true" 
+        overwrite="true"
+        failonerror="true"
         verbose="true"
         />
     <echo message="Deployed ${catalina.home}/webapps/${gc101.deployWar}"/>
   </target>
 
   <!-- ======================================================================== -->
-  
+
   <!-- GPSMapper servlet build directory -->
   <property name="build.gpsmapper" value="${build.home}/gpsmapper"/>
 
   <!-- Target: gpsmapper -->
-  <target name="gpsmapper.all" depends="gpsmapper"/> 
-  <target name="gpsmapper" depends="gpsmapper.compile,gpsmapper.war" 
+  <target name="gpsmapper.all" depends="gpsmapper"/>
+  <target name="gpsmapper" depends="gpsmapper.compile,gpsmapper.war"
     description="Compile/Create 'gpsmapper.war'">
     <echo message="'gpsmapper.war' created."/>
   </target>
 
   <!-- Target: gpsmapper.compile -->
-  <target name="gpsmapper.compile" depends="tomcat,prepare,gtsdb,wartools" 
+  <target name="gpsmapper.compile" depends="tomcat,prepare,gtsdb,wartools"
     description="Compile 'gpsmapper.war' source">
     <echo message="Compiling 'gpsmapper.war' servlet ..."/>
     <delete file="${build.home}/gpsmapper.war"/>
@@ -1442,14 +1442,14 @@ File   : build.xml
   </target>
 
   <!-- Target: gpsmapper.deploy -->
-  <target name="gpsmapper.deploy" depends="gpsmapper.war" 
+  <target name="gpsmapper.deploy" depends="gpsmapper.war"
     description="Deploy 'gpsmapper.war' to Tomcat">
     <echo message="Deploying 'gpsmapper.war' to ${catalina.home}/webapps/${gpsmapper.deployWar}"/>
-    <copy 
-        file="${build.home}/gpsmapper.war" 
+    <copy
+        file="${build.home}/gpsmapper.war"
         tofile="${catalina.home}/webapps/${gpsmapper.deployWar}"
-        overwrite="true" 
-        failonerror="true" 
+        overwrite="true"
+        failonerror="true"
         verbose="true"
         />
     <echo message="Deployed ${catalina.home}/webapps/${gpsmapper.deployWar}"/>
@@ -1459,7 +1459,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: Device Parser Module example template -->
-  <target name="template" depends="prepare,gtsdb" 
+  <target name="template" depends="prepare,gtsdb"
     description="Create 'Device Communication Server' template ...">
     <echo message="template ..."/>
 
@@ -1495,7 +1495,7 @@ File   : build.xml
 
   <!-- ======================================================================== -->
   <!-- Target: GP6000 -->
-  <target name="GP6000" depends="prepare,gtsdb" 
+  <target name="GP6000" depends="prepare,gtsdb"
     description="Create 'Device Communication Server' template ...">
     <echo message="GP6000 ..."/>
 
@@ -1531,9 +1531,46 @@ File   : build.xml
 
   <!-- ======================================================================== -->
   <!-- ======================================================================== -->
+  <!-- Target: GTX -->
+  <target name="GTX" depends="prepare,gtsdb" 
+    description="Create 'Device Communication Server' template ...">
+    <echo message="GTX ..."/>
+
+    <!-- compile template -->
+    <javac srcdir="${src.gts}"
+        includeAntRuntime="false"
+        source="${compiler.source}"
+        target="${compiler.target}"
+        destdir="${build.home}"
+        debug="${compile.debug}"
+        nowarn="${compile.nowarn}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+        <compilerarg compiler="${compiler.compiler}" value="${compile.Xlint}"/>
+        <classpath refid="compile.classpath"/>
+        <include name="org/opengts/servers/*.java"/>
+        <include name="org/opengts/servers/GTX/**/*.java"/>
+    </javac>
+
+    <!-- create GTX.jar server -->
+    <jar jarfile="${build.lib}/GTX.jar">
+        <manifest>
+            <attribute name="Class-Path" value="${Server_Jar_Classpath}"/>
+            <attribute name="Main-Class" value="org.opengts.servers.GTX.Main"/>
+        </manifest>
+        <fileset dir="${build.home}">
+            <include name="org/opengts/servers/*.class"/>
+            <include name="org/opengts/servers/GTX/**/*.class"/>
+        </fileset>
+    </jar>
+
+  </target>
+
+  <!-- ======================================================================== -->
+  <!-- ======================================================================== -->
 
   <!-- Target: [OLD] Device Parser Module example template -->
-  <target name="template_old" depends="prepare,gtsdb" 
+  <target name="template_old" depends="prepare,gtsdb"
     description="Create [OLD] 'Device Communication Server' template_old ...">
     <echo message="template_old ..."/>
 
@@ -1569,7 +1606,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: Device Parser Module I-CARE G3300 -->
-  <target name="icare" depends="prepare,gtsdb" 
+  <target name="icare" depends="prepare,gtsdb"
     description="Create 'Device Communication Server' I-CARE G3300 ...">
     <echo message="I-Care G3300 server 'icare.jar' ..."/>
 
@@ -1607,7 +1644,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: Device Parser Module Aspicore -->
-  <target name="aspicore" depends="prepare,gtsdb" 
+  <target name="aspicore" depends="prepare,gtsdb"
     description="Create 'Device Communication Server' Aspicore ...">
     <echo message="Aspicore 'aspicore.jar' ..."/>
 
@@ -1645,7 +1682,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: Device Parser Module SipGear -->
-  <target name="sipgear" depends="prepare,gtsdb" 
+  <target name="sipgear" depends="prepare,gtsdb"
     description="Create 'Device Communication Server' SipGear ...">
     <echo message="SipGear 'sipgear.jar' ..."/>
 
@@ -1683,7 +1720,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: Trimble ASCII Interface Protocol -->
-  <target name="taip" depends="prepare,gtsdb" 
+  <target name="taip" depends="prepare,gtsdb"
     description="Create 'Device Communication Server' TAIP ...">
     <echo message="TAIP server 'taip.jar' ..."/>
     <javac srcdir="${src.gts}"
@@ -1716,7 +1753,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: miscellaneous tools -->
-  <target name="tools" depends="prepare,gtsdb,tomcat" 
+  <target name="tools" depends="prepare,gtsdb,tomcat"
     description="Create Miscellaneous tools ...">
     <echo message="Tools ..."/>
 
@@ -1761,7 +1798,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: systemProps -->
-  <target name="systemProps" depends="prepare" 
+  <target name="systemProps" depends="prepare"
     description="Print System Properties">
     <echo message="Print System Properties ... "/>
 
@@ -1780,7 +1817,7 @@ File   : build.xml
         <classpath refid="compile.classpath"/>
         <include name="org/opengts/tools/PrintProperties.java"/>
     </javac>
-    
+
     <java classname="org.opengts.tools.PrintProperties" fork="false">
         <classpath refid="compile.classpath"/>
     </java>
@@ -1794,13 +1831,13 @@ File   : build.xml
   <target name="javadocs"
     description="Create Javadocs ...">
     <echo message="Create Javadocs ..."/>
-  
+
     <!-- clean old javadocs -->
     <delete dir="${basedir}/javadocs"/>
     <mkdir dir="${basedir}/javadocs"/>
 
     <!-- create javadocs -->
-    <javadoc 
+    <javadoc
         destdir="${basedir}/javadocs/"
         classpathref="compile.war.classpath"
         maxmemory="1024m">
@@ -1822,12 +1859,12 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: locale -->
-  <target name="locale" 
+  <target name="locale"
     description="Copy LocalStrings files to ${build.locale} ...">
-    
+
     <delete dir="${build.locale}"/>
     <mkdir dir="${build.locale}"/>
-    
+
     <copy todir="${build.locale}" verbose="false">
         <fileset dir="${src.gts}">
            <include name="**/LocalStrings_*.properties"/>
@@ -1842,7 +1879,7 @@ File   : build.xml
         <mapper type="regexp" from="^(.*)(_en)(.*)" to="\1_XX\3"/>
     </move>
     -->
-    
+
     <!-- delete temporary directories (may not be present) -->
     <delete dir="${build.locale}/org/opengts/custom"/>
     <delete dir="${build.locale}/org/opengts/opt"/>
@@ -1851,12 +1888,12 @@ File   : build.xml
   </target>
 
   <!-- Target: locale.old -->
-  <target name="locale.old" 
+  <target name="locale.old"
     description="Copy Old LocalStrings files to ${build.locale}.old ...">
-    
+
     <delete dir="${build.locale}.old"/>
     <mkdir dir="${build.locale}.old"/>
-    
+
     <copy todir="${build.locale}.old" verbose="false">
         <fileset dir="${src.gts}">
            <include name="**/LocalStrings_*.properties.old"/>
@@ -1868,7 +1905,7 @@ File   : build.xml
   <!-- ======================================================================== -->
 
   <!-- Target: epoch -->
-  <target name="epoch"  depends="gtsutils" 
+  <target name="epoch"  depends="gtsutils"
     description="Display Epoch time ...">
     <java classname="org.opengts.util.DateTime">
         <arg value="-now_sec"/>

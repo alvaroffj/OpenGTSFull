@@ -6,9 +6,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,29 +55,29 @@ public class DCServerFactory
 
     public  static final String  DCSERVERS_DIR                  = "dcservers";
     public  static final String  DCSERVER_XML                   = "dcservers.xml";
-    
+
     private static       File    LoadedDCServerXMLFile          = null;
 
     // ------------------------------------------------------------------------
-    
+
     public  static       boolean DEFAULT_WARN_PORT_CONFLICT     = true;
 
     // ------------------------------------------------------------------------
     // Attribute properties
-    
+
     public  static final String  PROP_Attribute_                = "Attribute.";
     public  static final String  PROP_Attribute_InputOffset     = PROP_Attribute_ + "inputOffset";
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     // Command types:
-    
+
     public  static final String CMDTYPE_ALL                     = "all";
     public  static final String CMDTYPE_MAP                     = "map";
     public  static final String CMDTYPE_ADMIN                   = "admin";
     public  static final String CMDTYPE_GARMIN                  = "garmin";
     public  static final String CMDTYPE_SYSADMIN                = "sysadmin";
-    
+
     public static boolean isCommandTypeAll(String type)
     {
         if (StringTools.isBlank(type)) {
@@ -89,18 +89,19 @@ public class DCServerFactory
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    // Registry of Device Communication Server IDs 
+    // Registry of Device Communication Server IDs
     // Device communication servers listed here must also have a corresponding
     // "<server>.jar" file in the OpenGTS "build/lib/" directory in order to
     // be supported.  If this "<server>.jar" file does not exist, then the
     // corresponding device communication server port entry is not used.
 
     public static final String  NONE_NAME                       = "none";           // reserved for "No Server"
-    
+
     /* OpenGTS */
     public static final String  OPENDMTP_NAME                   = "gtsdmtp";        // [31000,3x100,3x200] OpenDMTP
     public static final String  TEMPLATE_NAME                   = "template";       // [31200]
     public static final String  GP6000_NAME                     = "GP6000";       // [31200]
+    public static final String  GTX_NAME                        = "GTX";       // [31300]
     public static final String  ICARE_NAME                      = "icare";          // [31260] GX3300
     public static final String  ASPICORE_NAME                   = "aspicore";       // [31265] 3x265
     public static final String  SIPGEAR_NAME                    = "sipgear";        // [31270] 3x270
@@ -113,7 +114,7 @@ public class DCServerFactory
     public static final String  WONDE_NAME                      = "wonde";          // [3x240]
     public static final String  LAIPAC_NAME                     = "laipac";         // [3x250] S-911, StarFinder
     public static final String  INTELLITRAC_NAME                = "intellitrac";    // [30300] X1, X8
-    public static final String  K611_NAME                       = "k611";           // [3x380] 
+    public static final String  K611_NAME                       = "k611";           // [3x380]
     public static final String  ENFORA_NAME                     = "enfora";         // [3x400] (31400) MT-Gu, MT-uL, Mini-MT
     public static final String  MEITRACK_NAME                   = "meitrack";       // [3x480] VT310/CT03
     public static final String  MEITRACK2_NAME                  = "meitrack2";      // [3x482] MVT88/MVT100/MVT600
@@ -121,20 +122,20 @@ public class DCServerFactory
     public static final String  ELOC_NAME                       = "eloc";           // [3x490] (31490) eLOC GL100, Enduro
     public static final String  TZAVL05_NAME                    = "tzavl05";        // [3x510] TZone AVL05
     public static final String  TZAVL08_NAME                    = "tzavl08";        // [3x513] TZone AVL08
-    public static final String  ANTARES_NAME                    = "antares";        // [3x520] 
-    public static final String  ATRACK_NAME                     = "atrack";         // [3x525] 
-    public static final String  WEBTECH_NAME                    = "webtech";        // [3x530] 
+    public static final String  ANTARES_NAME                    = "antares";        // [3x520]
+    public static final String  ATRACK_NAME                     = "atrack";         // [3x525]
+    public static final String  WEBTECH_NAME                    = "webtech";        // [3x530]
     public static final String  TELTONIKA_NAME                  = "teltonika";      // [3x540]
     public static final String  TRIMTRAC_NAME                   = "trimtrac";       // [3x680] Pro
-    public static final String  XIRGO_NAME                      = "xirgo";          // [3x690] 
-    
+    public static final String  XIRGO_NAME                      = "xirgo";          // [3x690]
+
     public static final String  GLOBALSAT_NAME                  = "globalsat";      // [xxxxx]
     public static final String  STARSNAV_NAME                   = "starsnav";       // [xxxxx]
     public static final String  BLUETREE_NAME                   = "bluetree";       // [xxxxx]
     public static final String  MAJID_NAME                      = "majid";          // [xxxxx]
     public static final String  MOREY_NAME                      = "morey";          // [xxxxx]
     public static final String  BIGWATCHER_NAME                 = "bigwatcher";     // [xxxxx]
-    
+
     public static final String  GTSGEN1_NAME                    = "gtsgen_1";       // [3x111]
     public static final String  GTSGEN2_NAME                    = "gtsgen_2";       // [3x112]
 
@@ -154,9 +155,9 @@ public class DCServerFactory
     //   public static String DCServerFactory_LoadName() { return DCServerFactory.SERVER_NAME; }
     // In the absense of this method, or if this method return null/blank, then all available DCServers
     // will be loaded.
-    
+
     private static final String StaticMethod_LoadName           = "DCServerFactory_LoadName";
-    
+
     // ------------------------------------------------------------------------
 
     private static       String LoadServerNameOnly              = null;
@@ -169,7 +170,7 @@ public class DCServerFactory
     {
         return LoadServerNameOnly; // may be null/blank
     }
-   
+
     /**
     *** Returns true if a specific DCServerConfig name is defined.
     *** @return True if a specific DCServerConfig name is defined.
@@ -348,7 +349,7 @@ public class DCServerFactory
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     private static final String TAG_DCServerConfig      = "DCServerConfig";
     private static final String TAG_DCServer            = "DCServer";
     private static final String TAG_Description         = "Description";
@@ -436,10 +437,10 @@ public class DCServerFactory
         } catch (IOException ioe) {
             Print.logException("Parse error: ", ioe);
         }
-        
+
         /* return */
         return doc;
-        
+
     }
 
     /* load the 'dcserver.xml' file */
@@ -500,7 +501,7 @@ public class DCServerFactory
         /* xml file specified? */
         if (xmlFile == null) {
             // get default file
-            xmlFile = DCServerFactory._getDCServerXMLFile(); 
+            xmlFile = DCServerFactory._getDCServerXMLFile();
             // 'xmlFile' may still be null
         }
 
@@ -553,7 +554,7 @@ public class DCServerFactory
             Print.logError("["+xmlFile+"] Invalid root tag ID: " + dcsDef.getTagName());
             return null;
         }
-        
+
         /* top-level attributes */
         if (recurseLvl == 0) {
             BIND_ADDRESS   = XMLTools.getAttribute(   dcsDef, ATTR_bindAddress, BIND_ADDRESS  , true);
@@ -570,7 +571,7 @@ public class DCServerFactory
                 File dir = parentDir.getCanonicalFile();
                 parentDir = dir;
             } catch (Throwable th) {
-                // 
+                //
             }
         }
 
@@ -630,13 +631,13 @@ public class DCServerFactory
                 boolean warnPortConflict = DEFAULT_WARN_PORT_CONFLICT;
                 NodeList childNodes = dcsTag.getChildNodes();
                 for (int c = 0; c < childNodes.getLength(); c++) {
-    
+
                     /* get Node (only interested in 'Element's) */
                     Node dcsNode = childNodes.item(c);
                     if (!(dcsNode instanceof Element)) {
                         continue;
                     }
-    
+
                     /* parse node */
                     String nodeName = dcsNode.getNodeName();
                     Element dcsElem = (Element)dcsNode;
@@ -843,8 +844,8 @@ public class DCServerFactory
                                         }
                                     }
                                     dcs.addCommand(
-                                        cmdName, cmdDesc, 
-                                        cmdTypes, 
+                                        cmdName, cmdDesc,
+                                        cmdTypes,
                                         cmdAclName, cmdAclDft,
                                         cmdString, hasArgs, cmdArgList,
                                         cmdProto, expectAck,
@@ -857,7 +858,7 @@ public class DCServerFactory
                     } else {
                         Print.logError("["+xmlFile+"] Unrecognized tag name: " + nodeName);
                     }
-    
+
                 }
 
                 /* TCP check ports */
@@ -879,7 +880,7 @@ public class DCServerFactory
                 } else {
                     Print.logWarn("TCPPortMap is null!");
                 }
-    
+
                 /* UDP check ports */
                 if (UDPPortMap != null) {
                     int udpPorts[] = dcs.getUdpPorts();
@@ -899,7 +900,7 @@ public class DCServerFactory
                 } else {
                     Print.logWarn("UDPPortMap is null!");
                 }
-    
+
                 /* save dcs */
                 //Print.logInfo("Saving " + dcs.getName());
                 dcserverSet.add(dcs);
@@ -916,7 +917,7 @@ public class DCServerFactory
                     Print.logError("Invalid 'Include' (blank file)");
                     continue;
                 }
-                
+
                 /* directory override */
                 String inclDirStr = inclTag.getAttribute(ATTR_dir);
                 File inclDir = null;
@@ -926,7 +927,7 @@ public class DCServerFactory
                 if (!StringTools.isBlank(INCLUDE_DIR)) {
                     inclDir = new File(INCLUDE_DIR);
                 }
-        
+
                 /* locate file */
                 File inclFile = null;
                 if ((inclDir != null) && inclDir.isAbsolute()) {
@@ -988,16 +989,16 @@ public class DCServerFactory
         return dcserverSet;
 
     }
-    
+
     private static int[] parsePorts(String portStr)
     {
         if (!StringTools.isBlank(portStr)) {
             String portArr[] = StringTools.split(portStr,',');
             int    portInt[] = StringTools.parseInt(portArr,-1);
             if (!ListTools.isEmpty(portInt)) {
-                for (int i = 0; i < portInt.length; i++) { 
-                    if (portInt[i] > 0) { 
-                        portInt[i] += PORT_OFFSET; 
+                for (int i = 0; i < portInt.length; i++) {
+                    if (portInt[i] > 0) {
+                        portInt[i] += PORT_OFFSET;
                     } else {
                         Print.logError("Invalid port specification: " + portStr);
                         return null;
@@ -1011,7 +1012,7 @@ public class DCServerFactory
         }
         return null;
     }
-    
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
 
@@ -1085,7 +1086,7 @@ public class DCServerFactory
         BIND_ADDRESS   = RTConfig.getString(DBConfig.PROP_dcs_bindInterface, BIND_ADDRESS);
         LISTEN_BACKLOG = RTConfig.getInt(   DBConfig.PROP_dcs_listenBacklog, LISTEN_BACKLOG);
         PORT_OFFSET    = RTConfig.getInt(   DBConfig.PROP_dcs_portOffset   , PORT_OFFSET);
-        
+
         /* specific DCServer? */
         DCServerFactory.InitSpecificDCServerName();
         if (DCServerFactory.HasSpecificDCServerName()) {
@@ -1126,10 +1127,10 @@ public class DCServerFactory
     *** Adds the named server to the list of registered servers
     **/
     public static DCServerConfig addDCS(
-        String name, String desc, 
-        int tcpPorts[], int udpPorts[], 
-        int commandPort, 
-        long flags, 
+        String name, String desc,
+        int tcpPorts[], int udpPorts[],
+        int commandPort,
+        long flags,
         String... uniqPfx)
     {
 
@@ -1201,7 +1202,7 @@ public class DCServerFactory
         return dcs;
 
     }
-    
+
     /**
     *** Returns the DCServerConfig instance for the specified device communication server name
     *** @param name  The name of the device communication server
@@ -1393,7 +1394,7 @@ public class DCServerFactory
     {
         return getPorts(ports);
     }
-    
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
 
@@ -1439,7 +1440,7 @@ public class DCServerFactory
         DCServerConfig dcs = DCServerFactory.getServerConfig(serverName);
         return (dcs != null)? dcs.getCommandDispatcherPort() : 0;
     }
-    
+
     /**
     *** Send a command request to the command port for the specified server
     **/
@@ -1492,12 +1493,12 @@ public class DCServerFactory
         } finally {
             cst.closeSocket();
         }
-        
+
         /* return response */
         return response;
 
     }
-    
+
     /**
     *** Send a command request to the server command port for the specified Device
     **/
@@ -1509,7 +1510,7 @@ public class DCServerFactory
         if (device == null) {
             Print.logWarn("Device is null");
             return null;
-        } 
+        }
         String acctID = device.getAccountID();
         String devID  = device.getDeviceID();
 
@@ -1523,7 +1524,7 @@ public class DCServerFactory
             resp.setString(DCServerFactory.RESPONSE_MESSAGE, result.toString());
             return resp;
         }
-        
+
         /* exceed max 'ping' */
         int totPings = device.getTotalPingCount();
         int maxPings = device.getMaxPingCount();
@@ -1549,7 +1550,7 @@ public class DCServerFactory
 
     }
 
-    public static RTProperties createRTProperties(String accountID, String deviceID, 
+    public static RTProperties createRTProperties(String accountID, String deviceID,
         String cmdType, String cmdName, String cmdArgs[])
     {
         RTProperties rtCmd = new RTProperties();
@@ -1565,12 +1566,12 @@ public class DCServerFactory
         }
         return rtCmd;
     }
-    
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
 
     /**
-    *** Calculates/returns the next odometer value 
+    *** Calculates/returns the next odometer value
     **/
     public static double calculateOdometerKM(EventData prevEvent, GeoPoint toPoint)
     {
@@ -1589,7 +1590,7 @@ public class DCServerFactory
     *** Add device-id to UnassignedDevice table
     **/
     public static void addUnassignedDevice(
-        String dcName, String mobID, 
+        String dcName, String mobID,
         GeoPoint geoPoint)
     {
         DCServerFactory.addUnassignedDevice(dcName, mobID, null, true, geoPoint, null/*data*/);
@@ -1599,7 +1600,7 @@ public class DCServerFactory
     *** Add device-id to UnassignedDevice table
     **/
     public static void addUnassignedDevice(
-        String dcName, String mobID, 
+        String dcName, String mobID,
         String ipAddr, boolean isDuplex,
         GeoPoint geoPoint)
     {
@@ -1610,7 +1611,7 @@ public class DCServerFactory
     *** Add device-id to UnassignedDevice table
     **/
     public static void addUnassignedDevice(
-        String dcName, String mobID, 
+        String dcName, String mobID,
         String ipAddr, boolean isDuplex,
         GeoPoint geoPoint,
         String data)
@@ -1624,7 +1625,7 @@ public class DCServerFactory
     *** Add device-id to UnassignedDevice table
     **/
     public static void addUnassignedDevice(
-        String dcName, String mobID, 
+        String dcName, String mobID,
         double lat, double lon)
     {
         DCServerFactory.addUnassignedDevice(dcName, mobID, null, true, lat, lon, null/*data*/);
@@ -1634,24 +1635,24 @@ public class DCServerFactory
     *** Add device-id to UnassignedDevice table
     **/
     public static void addUnassignedDevice(
-        String dcName, String mobID, 
+        String dcName, String mobID,
         String ipAddr, boolean isDuplex,
         double lat, double lon)
     {
         DCServerFactory.addUnassignedDevice(dcName, mobID, ipAddr, isDuplex, lat, lon, null/*data*/);
     }
-    
+
     /**
     *** Add device-id to UnassignedDevice table
     **/
     public static void addUnassignedDevice(
-        String dcName, String mobID, 
+        String dcName, String mobID,
         String ipAddr, boolean isDuplex,
         double lat, double lon,
         String data)
     {
         try {
-            //org.opengts.extra.tables.UnassignedDevices.add(dcName, mobID, lat, lon); 
+            //org.opengts.extra.tables.UnassignedDevices.add(dcName, mobID, lat, lon);
             MethodAction unasDev = new MethodAction(
                 (DBConfig.PACKAGE_EXTRA_TABLES_ + "UnassignedDevices"),
                 "add",
@@ -1703,7 +1704,7 @@ public class DCServerFactory
 
     /**
     *** Analyzes/Prints the current memory usage.
-    *** (see OSTools.checkMemoryUsage) 
+    *** (see OSTools.checkMemoryUsage)
     **/
     public static void checkMemoryUsage()
     {
@@ -1721,7 +1722,7 @@ public class DCServerFactory
     **/
     public static Device loadDeviceUniqueID(String prefix[], String modemID)
     {
-        return DCServerFactory.loadDeviceUniqueID(prefix, modemID, 
+        return DCServerFactory.loadDeviceUniqueID(prefix, modemID,
             false, null, null, true, null);
     }
 
@@ -1735,10 +1736,10 @@ public class DCServerFactory
     *** @param geoPoint         The GPS location of the device, used for UnassignedDevice entries
     *** @return The Device record
     **/
-    public static Device loadDeviceUniqueID(String prefix[], String modemID, 
+    public static Device loadDeviceUniqueID(String prefix[], String modemID,
         String serverID, String ipAddress, boolean isDuplex, GeoPoint geoPoint)
     {
-        return DCServerFactory.loadDeviceUniqueID(prefix, modemID, 
+        return DCServerFactory.loadDeviceUniqueID(prefix, modemID,
             true, serverID, ipAddress, isDuplex, geoPoint);
     }
 
@@ -1753,7 +1754,7 @@ public class DCServerFactory
     *** @param geoPoint         The GPS location of the device, used for UnassignedDevice entries
     *** @return The Device record
     **/
-    public static Device loadDeviceUniqueID(String prefix[], String modemID, 
+    public static Device loadDeviceUniqueID(String prefix[], String modemID,
         boolean saveUnassigned, String serverID, String ipAddress, boolean isDuplex, GeoPoint geoPoint)
     {
         Device device = null;
@@ -1814,7 +1815,7 @@ public class DCServerFactory
     *** Lookup the specified mobile ID in the Transport/Device tables using
     *** the specified DC server prefixes.
     **/
-    private static void _lookupUniqueID(java.util.List<Device> devList, 
+    private static void _lookupUniqueID(java.util.List<Device> devList,
         DCServerConfig dcs,
         String uniqueID, Set<String> uidTried)
     {
@@ -1835,7 +1836,7 @@ public class DCServerFactory
             }
         }
     }
-    
+
     /**
     *** Lookup the specified mobile-id in the Transport/Device tables, use
     *** all available DC servers unique-id prefixes.
@@ -1844,12 +1845,12 @@ public class DCServerFactory
     **/
     public static Device[] lookupUniqueID(String mobileID)
     {
-        
+
         /* ignore blank mobile-id */
         if (StringTools.isBlank(mobileID)) {
             return new Device[0];
         }
-        
+
         /* list of found devices */
         java.util.List<Device> devList = new Vector<Device>();
 
@@ -1899,7 +1900,7 @@ public class DCServerFactory
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     // Runtime property name suffixes
- 
+
     public static final String  CFG_uniquePrefix                = ".uniquePrefix";               // String array
     public static final String  CFG_uniqueIdPrefix              = ".uniqueIdPrefix";             // String array
     public static final String  CFG_tcpPort                     = ".tcpPort";                    // int
@@ -2210,7 +2211,7 @@ public class DCServerFactory
         Print.logInfo("  -arg=<arg>              The command argument");
         System.exit(1);
     }
-    
+
     /**
     *** Command-line main entry point
     **/
@@ -2223,13 +2224,13 @@ public class DCServerFactory
         String cmdType   = RTConfig.getString(ARG_CMDTYPE, "");
         String cmdName   = RTConfig.getString(ARG_CMDNAME, "");
         String cmdArg0   = RTConfig.getString(ARG_ARG    , "");
-        
+
         /* list */
         if (RTConfig.hasProperty(ARG_LIST)) {
             java.util.List<DCServerConfig> list = getServerConfigList(true);
             for (DCServerConfig dcs : list) {
                 Print.sysPrintln(dcs.getName() + ":");
-                File jarPath[] = dcs.getRunningJarPath(); 
+                File jarPath[] = dcs.getRunningJarPath();
                 if (!ListTools.isEmpty(jarPath)) {
                     if (jarPath.length == 1) {
                         Print.sysPrintln("  Jar: " + jarPath[0]);
@@ -2248,7 +2249,7 @@ public class DCServerFactory
             }
             System.exit(0);
         }
-        
+
         /* lookup IMEI# */
         if (RTConfig.hasProperty(ARG_LOOKUP)) {
             String uid = RTConfig.getString(ARG_LOOKUP,null);
@@ -2282,13 +2283,13 @@ public class DCServerFactory
             Print.sysPrintln("ERROR: account/device missing");
             usage();
         }
-        
+
         /* command blank? */
         if (StringTools.isBlank(cmdType)) {
             Print.sysPrintln("ERROR: command type missing");
             usage();
         }
-        
+
         /* pre-check DCS existance */
         Print.logDebug("Checking DCServerConfig existance: %s", server);
         DCServerConfig dcs = DCServerFactory.getServerConfig(server);
@@ -2296,7 +2297,7 @@ public class DCServerFactory
             Print.sysPrintln("ERROR: Invalid server id: %s", server);
             usage();
         }
-        
+
         /* send */
         String cmdArgs[] = new String[] { cmdArg0 };
         RTProperties resp = DCServerFactory._sendServerCommand(server, accountID, deviceID, cmdType, cmdName, cmdArgs);
@@ -2305,9 +2306,8 @@ public class DCServerFactory
             System.exit(2);
         }
         Print.sysPrintln("Command Response: " + resp);
-        
+
     }
     // ------------------------------------------------------------------------
 
 }
-    
