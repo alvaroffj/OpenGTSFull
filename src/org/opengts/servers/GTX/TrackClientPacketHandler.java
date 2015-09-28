@@ -486,22 +486,26 @@ public class TrackClientPacketHandler
         }
 
         /* parse to fields */
-        // String fld[] = StringTools.parseString(s, '|');
-        String ini = s.substring(0, 2);
+        String fld[] = StringTools.parseString(s, '|');
+        String ini = fld[0].substring(0, 2);
         Print.logInfo("Ini: " + ini);
-        String l = s.substring(2, 4);
-        byte la[] = StringTools.parseHex(l, null);
-        String las = new String(la);
-        Print.logInfo("l: " + las);
-        String id = s.substring(4, 11);
-        byte ida[] = StringTools.parseHex(id, null);
-        String idas = new String(ida);
-        Print.logInfo("id: " + idas);
-        String com = s.substring(11, 13);
-        byte coma[] = StringTools.parseHex(com, null);
-        String comas = new String(coma);
-        Print.logInfo("com: " + comas);
-
+        // String l = s.substring(2, 4);
+        // byte la[] = StringTools.parseHex(l, null);
+        // String las = new String(la);
+        // Print.logInfo("l: " + las);
+        // String id = s.substring(4, 11);
+        // byte ida[] = StringTools.parseHex(id, null);
+        // String idas = new String(ida);
+        // Print.logInfo("id: " + idas);
+        // String com = s.substring(11, 13);
+        // byte coma[] = StringTools.parseHex(com, null);
+        // String comas = new String(coma);
+        // Print.logInfo("com: " + comas);
+        if(ini.compareTo('$$') == 0) {
+            String data = fld[0].substring(13, fld[0].length() - 1);
+            Print.logInfo("data: " + data);
+            Nmea0183 gprmc = new Nmea0183(data, true);
+        }
 //         if ((fld == null) || (fld.length < 14)) {
 //             Print.logWarn("Numero invalido de campos: ");
 //             return null;
