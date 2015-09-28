@@ -499,9 +499,9 @@ public class TrackClientPacketHandler
         Print.logInfo("id: " + id);
         id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
         Print.logInfo("id: " + id);
-        id = this.hexToString(id);
-        Print.logInfo("id: " + id);
-        
+        float idf = this.hexToFloat(id);
+        Print.logInfo("id: " + String.format("%.2f", idf));
+
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
         // String com = s.substring(11, 13);
@@ -605,6 +605,12 @@ public class TrackClientPacketHandler
             temp.append(decimal);
         }
         return sb.toString();
+    }
+
+    public float hexToFloat(String hex) {
+        Long i = Long.parseLong(hex, 16);
+        Float f = Float.intBitsToFloat(i.intValue());
+        return f;
     }
 
     private void lanzar(String url1) throws MalformedURLException, IOException {
