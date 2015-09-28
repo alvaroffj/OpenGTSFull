@@ -491,13 +491,13 @@ public class TrackClientPacketHandler
         Print.logInfo("Ini :" + ini);
         String l = s.substring(2, 4);
         byte la[] = StringTools.parseHex(l, null);
-        Print.logInfo("l :" + la[0]);
+        Print.logInfo("l :" + new String(la, "UTF-8"));
         String id = s.substring(4, 11);
         byte ida[] = StringTools.parseHex(id, null);
-        Print.logInfo("id :" + ida[0]);
+        Print.logInfo("id :" + new String(ida, "UTF-8"));
         String com = s.substring(11, 13);
         byte coma[] = StringTools.parseHex(com, null);
-        Print.logInfo("com :" + coma[0]);
+        Print.logInfo("com :" + new String(coma, "UTF-8"));
 
 //         if ((fld == null) || (fld.length < 14)) {
 //             Print.logWarn("Numero invalido de campos: ");
