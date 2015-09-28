@@ -500,7 +500,7 @@ public class TrackClientPacketHandler
         id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
         Print.logInfo("id: " + id);
         float idf = this.hexToFloat(id);
-        Print.logInfo("id: " + String.format("%.2f", idf));
+        Print.logInfo("id: " + String.format("%f", idf));
 
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
