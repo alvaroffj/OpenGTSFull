@@ -477,10 +477,8 @@ public class TrackClientPacketHandler
          */
 
        Print.logInfo("Parsear: " + s);
-       String a = StringTools.parseHexAscii(s);
-
-       Print.logInfo("Parsear: " + a);
-
+       Print.logInfo("Largo cadena :" + s.length());
+    //    String a = StringTools.parseHex(s);
         /* pre-validate */
         if (s == null) {
             Print.logError("Cadena nula");
@@ -488,7 +486,16 @@ public class TrackClientPacketHandler
         }
 
         /* parse to fields */
-        String fld[] = StringTools.parseString(s, '|');
+        // String fld[] = StringTools.parseString(s, '|');
+        String ini = s.substring(0, 2);
+        Print.logInfo("Ini :" + ini);
+        String l = s.substring(2, 4);
+        Print.logInfo("l :" + l);
+        String id = s.substring(4, 11);
+        Print.logInfo("id :" + id);
+        String com = s.substring(11, 13);
+        Print.logInfo("com :" + com);
+
         if ((fld == null) || (fld.length < 14)) {
             Print.logWarn("Numero invalido de campos: ");
             return null;
