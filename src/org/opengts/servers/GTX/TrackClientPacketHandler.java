@@ -495,10 +495,10 @@ public class TrackClientPacketHandler
         // byte la[] = StringTools.parseHex(l, null);
         // String las = new String(la);
         // Print.logInfo("l: " + las);
-        String id = fld[0].substring(7, 13);
-        Print.logInfo("id: " + id);
-        id = this.hexToString(id);
-        Print.logInfo("id: " + id);
+        // String id = fld[0].substring(7, 13);
+        // Print.logInfo("id: " + id);
+        // id = this.hexToString(id);
+        // Print.logInfo("id: " + id);
 
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
