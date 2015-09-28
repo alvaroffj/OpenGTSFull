@@ -490,14 +490,17 @@ public class TrackClientPacketHandler
         String ini = fld[0].substring(0, 2);
         Print.logInfo("Ini: " + ini);
         String IMEI = "12345678";
+
         // String l = s.substring(2, 4);
         // byte la[] = StringTools.parseHex(l, null);
         // String las = new String(la);
         // Print.logInfo("l: " + las);
-        // String id = s.substring(4, 11);
+        String id = fld[0].substring(4, 11);
+        id = this.hexToString(id);
+        Print.logInfo("id: " + id);
+
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
-        // Print.logInfo("id: " + idas);
         // String com = s.substring(11, 13);
         // byte coma[] = StringTools.parseHex(com, null);
         // String comas = new String(coma);
@@ -587,6 +590,18 @@ public class TrackClientPacketHandler
         }
         return null;
 
+    }
+
+    public String hexToString(String hex) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder temp = new StringBuilder();
+        for (int i = 0; i < hex.length() - 1; i += 2) {
+            String output = hex.substring(i, (i + 2));
+            int decimal = Integer.parseInt(output, 16);
+            sb.append((char) decimal);
+            temp.append(decimal);
+        }
+        return sb.toString();
     }
 
     private void lanzar(String url1) throws MalformedURLException, IOException {
