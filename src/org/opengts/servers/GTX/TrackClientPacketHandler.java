@@ -499,7 +499,9 @@ public class TrackClientPacketHandler
         Print.logInfo("id: " + id);
         id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
         Print.logInfo("id: " + id);
-
+        id = this.hexToString(id);
+        Print.logInfo("id: " + id);
+        
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
         // String com = s.substring(11, 13);
