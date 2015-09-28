@@ -490,10 +490,13 @@ public class TrackClientPacketHandler
         String ini = s.substring(0, 2);
         Print.logInfo("Ini :" + ini);
         String l = s.substring(2, 4);
+        l = StringTools.parseHex(l);
         Print.logInfo("l :" + l);
         String id = s.substring(4, 11);
+        id = StringTools.parseHex(id);
         Print.logInfo("id :" + id);
         String com = s.substring(11, 13);
+        com = StringTools.parseHex(com);
         Print.logInfo("com :" + com);
 
 //         if ((fld == null) || (fld.length < 14)) {
