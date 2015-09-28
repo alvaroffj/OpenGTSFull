@@ -575,7 +575,7 @@ public class TrackClientPacketHandler
                 + "&temp=" + temp + ""
                 + "&sa=" + sa + ""
                 + "&sd=" + sd + ""
-                + "&rawData=" + s;
+                + "&rawData=";
 
         Print.logInfo("Enviando :" + url);
         try {
