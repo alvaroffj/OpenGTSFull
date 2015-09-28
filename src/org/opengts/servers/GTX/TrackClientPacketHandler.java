@@ -502,7 +502,7 @@ public class TrackClientPacketHandler
         // String comas = new String(coma);
         // Print.logInfo("com: " + comas);
         if(ini.compareTo("$$") == 0) {
-            String data = "$GPRMC,"+fld[0].substring(13, fld[0].length() - 1);
+            String data = "$GPRMC,"+fld[0].substring(13, fld[0].length());
             Print.logInfo("data: " + data);
             Nmea0183 gprmc = new Nmea0183(data, true);
         }

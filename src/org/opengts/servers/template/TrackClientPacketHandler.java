@@ -6,9 +6,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // Description:
 //  Template data packet 'business' logic.
-//  This module is an *example* of how client data packets can be parsed and 
+//  This module is an *example* of how client data packets can be parsed and
 //  inserted into the EventData table.  Since every device protocol is different,
 //  significant changes will likely be necessary to support the protocol used by
 //  your chosen device.
@@ -26,15 +26,15 @@
 // Notes:
 // - See the OpenGTS_Config.pdf document for additional information regarding the
 //   implementation of a device communication server.
-// - Implementing a device communication server for your chosen device may take a 
-//   signigicant and substantial amount of programming work to accomplish, depending 
-//   on the device protocol.  To implement a server, you will likely need an in-depth 
-//   understanding of TCP/UDP based communication, and a good understanding of Java 
-//   programming techniques, including socket communication and multi-threading. 
-// - The first and most important step when starting to implement a device 
-//   communication server for your chosen device is to obtain and fully understand  
-//   the protocol documentation from the manufacturer of the device.  Attempting to 
-//   reverse-engineer a raw-socket base protocol can prove extremely difficult, if  
+// - Implementing a device communication server for your chosen device may take a
+//   signigicant and substantial amount of programming work to accomplish, depending
+//   on the device protocol.  To implement a server, you will likely need an in-depth
+//   understanding of TCP/UDP based communication, and a good understanding of Java
+//   programming techniques, including socket communication and multi-threading.
+// - The first and most important step when starting to implement a device
+//   communication server for your chosen device is to obtain and fully understand
+//   the protocol documentation from the manufacturer of the device.  Attempting to
+//   reverse-engineer a raw-socket base protocol can prove extremely difficult, if
 //   not impossible, without proper protocol documentation.
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public class TrackClientPacketHandler
     // cannot anticipate every possible ASCII/Binary protocol that may be encounted, this
     // module should only be used as an *example* of how a device communication server might
     // be implemented.  The implementation of a device communication server for your chosen
-    // device may take a signigicant and substantial amount of programming work to accomplish, 
+    // device may take a signigicant and substantial amount of programming work to accomplish,
     // depending on the device protocol.
     public static int DATA_FORMAT_OPTION = 1;
     // ------------------------------------------------------------------------
@@ -128,10 +128,10 @@ public class TrackClientPacketHandler
     //  - Enabling this feature may cause an extra query to the EventData table to obtain
     //    the previous EventData record, from which it will calculate the distance between
     //    this prior point and the current point.  This means that the GPS "dithering"
-    //    thich can occur when a vehicle is stopped will cause the calculated odometer 
+    //    thich can occur when a vehicle is stopped will cause the calculated odometer
     //    value to increase even when the vehicle is not moving.  You may wish to add some
-    //    additional logic to mitigate this particular behavior.  
-    //  - The accuracy of a GPS-based odometer calculation varies greatly depending on 
+    //    additional logic to mitigate this particular behavior.
+    //  - The accuracy of a GPS-based odometer calculation varies greatly depending on
     //    factors such as the accuracy of the GPS receiver (ie. WAAS, DGPS, etc), the time
     //    interval between generated "in-motion" events, and how straight or curved the
     //    road is.  Typically, a GPS-based odometer tends to under-estimate the actual
@@ -210,7 +210,7 @@ public class TrackClientPacketHandler
     /* Session 'terminate' indicator */
     // This value should be set to 'true' when this server has determined that the
     // session should be terminated.  For instance, if this server finishes communication
-    // with the device or if parser finds a fatal error in the incoming data stream 
+    // with the device or if parser finds a fatal error in the incoming data stream
     // (ie. invalid account/device, or unrecognizable data).
     private boolean terminate = false;
 
@@ -220,7 +220,7 @@ public class TrackClientPacketHandler
     private boolean isDuplex = true;
 
     /* session IP address */
-    // These values will be set for you by the incoming session to indicate the 
+    // These values will be set for you by the incoming session to indicate the
     // originating IP address.
     private InetAddress inetAddress = null;
     private String ipAddress = null;
@@ -285,13 +285,13 @@ public class TrackClientPacketHandler
         // (This method is only called if "Constants.ASCII_PACKETS" is false!)
         //
         // This method is possibly the most important part of a server protocol implementation.
-        // The length of the incoming client packet must be correctly identified in order to 
+        // The length of the incoming client packet must be correctly identified in order to
         // know how many incoming packet bytes should be read.
         //
         // 'packetLen' will be the value specified by Constants.MIN_PACKET_LENGTH, and should
         // be the minimum number of bytes required (but not more) to accurately determine what
-        // the total length of the incoming client packet will be.  After analyzing the initial 
-        // bytes of the packet, this method should return what it beleives to be the full length 
+        // the total length of the incoming client packet will be.  After analyzing the initial
+        // bytes of the packet, this method should return what it beleives to be the full length
         // of the client data packet, including the length of these initial bytes.
         //
         // For example:
@@ -299,14 +299,14 @@ public class TrackClientPacketHandler
         //      Byte  0    - packet type
         //      Byte  1    - payload length (ie packet data)
         //      Bytes 2..X - payload data (as determined by the payload length byte)
-        // In this case 'Constants.ASCII_PACKETS' should be set to 'false', and 
+        // In this case 'Constants.ASCII_PACKETS' should be set to 'false', and
         // 'Constants.MIN_PACKET_LENGTH' should be set to '2' (the minimum number of bytes
         // required to determine the actual packet length).  This method should then return
         // the following:
         //      return 2 + ((int)packet[1] & 0xFF);
         // Which is the packet header length (2 bytes) plus the remaining length of the data
-        // payload found in the second byte of the packet header. 
-        // 
+        // payload found in the second byte of the packet header.
+        //
         // Note that the integer cast and 0xFF mask is very important.  'byte' values in
         // Java are signed, thus the byte 0xFF actually represents a '-1'.  So if the packet
         // payload length is 128, then without the (int) cast and mask, the returned value
@@ -376,7 +376,7 @@ public class TrackClientPacketHandler
         // After determining the length of a client packet (see method 'getActualPacketLength'),
         // this method is called with the single packet which has been read from the client.
         // It is the responsibility of this method to determine what type of packet was received
-        // from the client, parse/insert any event data into the tables, and return any expected 
+        // from the client, parse/insert any event data into the tables, and return any expected
         // response that the client may be expected in the form of a byte array.
         if ((pktBytes != null) && (pktBytes.length > 0)) {
 
@@ -432,7 +432,7 @@ public class TrackClientPacketHandler
         // when this method returns, the server framework then starts the process over again
         // attempting to read another packet from the client device (see method 'getActualPacketLength').
         // If this server determines that communicqtion with the client device has completed, then
-        // the above "terminateSession" method should return true [the method "setTerminate()" is 
+        // the above "terminateSession" method should return true [the method "setTerminate()" is
         // provided to facilitate session termination - see "setTerminate" above].
 
     }
@@ -459,7 +459,7 @@ public class TrackClientPacketHandler
         // the format provided by your device (assuming that the format is even ASCII).
 
         // This parsing method assumes the data format appears as follows:
-        //      0             1        2       3         4       5     6  
+        //      0             1        2       3         4       5     6
         // <IMEI number>,2006/09/05,07:47:26,35.3640,-141.2958,27.0,224.8
         //   0 - IMEI unique ID
         //   1 - Date [GMT]
@@ -469,20 +469,20 @@ public class TrackClientPacketHandler
         //   5 - Speed (kph)
         //   6 - Heading (degrees)
 		/*
-        0										1										2	3	4		5				6			7		8			9	10	  11	12	 13		
+        0										1										2	3	4		5				6			7		8			9	10	  11	12	 13
         $$B0353358019462410|AA$GPRMC,102156.000,A,2232.4690,N,11403.6847,E,0.00,,180909,,*15|02.0|01.2|01.6|000000001010|20090918102156|14181353|00000000|279311AA|0000|0.7614|0080|D2B5
-        
+
         /*
-        
+
         Form at : $$(2 Bytes) + Len(2 Bytes) + IMEI(15 Bytes) + | + AlarmType(2 Bytes) + GPRMC + | + PDOP + | + HDOP + | + VDOP + | + Status(12 Bytes) + | + RTC(14 Bytes) + | + Voltage(8 Bytes) + | + ADC(8 Bytes) + | + LACCI(8 Bytes) + | + Temperature(4 Bytes) | + Mile-meter (14 Bytes)+ | Serial(4 Bytes) + | + Checksum (4 Byte) + \r\n(2 Bytes)
-        
+
          * 0:  $$ 			:	2Bytes, indicates header of command from tracker unit to call centre, in ASCII						code (hex is 0x24).
         B0				:	Len 2Bytes, indicates length of all command, including header and end (the array is first high to low).
         353358019462410|             :	IMEI 15 Bytes, at most 20 bytes .
          * 1:  AA			:	Alarm type 2Bytes, the GPRS data trigger type .
         $GPRMC,			:	DATA GPRMC string
         102156.000	,               :	hora utc 10:21:56:000
-        A,				: 	= Data status (A=Valid GPS position, V=navigation receiver warning) 
+        A,				: 	= Data status (A=Valid GPS position, V=navigation receiver warning)
         2232.4690,N,                :	Latitud
         11403.6847,E,               :	Longitud
         0.00,			:	Speed over ground in knot
@@ -536,7 +536,7 @@ public class TrackClientPacketHandler
         double longitude;
         double speedKPH;
         double heading;
-        double altitudeM = 0.0;  // 
+        double altitudeM = 0.0;  //
         String gprmcparcial;
         String gprmccortado[];
         String horautc;
@@ -567,12 +567,17 @@ public class TrackClientPacketHandler
         }
             //       Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), IGNORE_NMEA_CHECKSUM);
 
-        String aa = fld[1].substring(0, 2);
-        String mileage = fld[11];
-        String temp = fld[10];
-        String sa = fld[5];
-        String sd = fld[8];
-        
+        // String aa = fld[1].substring(0, 2);
+        // String mileage = fld[11];
+        // String temp = fld[10];
+        // String sa = fld[5];
+        // String sd = fld[8];
+        String aa = "AA";
+        String mileage = "0";
+        String temp = "0";
+        String sa = "0";
+        String sd = "0";
+
 
         /* no deviceID? */
         if (StringTools.isBlank(IMEI)) {
@@ -778,7 +783,7 @@ public class TrackClientPacketHandler
         double longitude = gprmc.getLongitude();
         double speedKPH = gprmc.getSpeedKPH();
         double heading = gprmc.getHeading();
-        double altitudeM = 0.0;  // 
+        double altitudeM = 0.0;  //
 
         /* no deviceID? */
         if (StringTools.isBlank(deviceID)) {
@@ -840,7 +845,7 @@ public class TrackClientPacketHandler
         // The following data field are supported:
         //   mid   = Mobile-ID (typically the IMEI#)
         //   ts    = Timestamp (in Unix Epoch format)
-        //   code  = The status code 
+        //   code  = The status code
         //   gps   = the latitude/logitude
         //   age   = age of GPS fix in seconds
         //   sats  = number of satellites
@@ -972,7 +977,7 @@ public class TrackClientPacketHandler
     // which have been saved in a file.  To run this module to load your save GPS data
     // packets, start this command as follows:
     //   java -cp <classpath> org.opengts.servers.template.TrackClientPacketHandler {options}
-    // Where your options are one or more of 
+    // Where your options are one or more of
     //   -insert=[true|false]    Insert parse records into EventData
     //   -format=[1|2]           Data format
     //   -debug                  Parse internal sample data
@@ -1051,7 +1056,7 @@ public class TrackClientPacketHandler
 
             /* loop through file */
             try {
-                // records are assumed to be terminated by CR/NL 
+                // records are assumed to be terminated by CR/NL
                 for (;;) {
                     String data = FileTools.readLine(fis);
                     if (!StringTools.isBlank(data)) {
