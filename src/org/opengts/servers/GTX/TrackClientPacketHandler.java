@@ -381,9 +381,9 @@ public class TrackClientPacketHandler
         if ((pktBytes != null) && (pktBytes.length > 0)) {
 
             /* (debug message) display received data packet */
-//            Print.logInfo("Recv[HEX]: " + StringTools.toHexString(pktBytes));
+           Print.logInfo("Recv[HEX]: " + StringTools.toHexString(pktBytes));
             String s = StringTools.toStringValue(pktBytes).trim(); // remove leading/trailing spaces
-//            Print.logInfo("Recv[TXT]: " + s); // debug message
+           Print.logInfo("Recv[TXT]: " + s); // debug message
 
             /* parse/insert event */
             byte rtn[] = null;
