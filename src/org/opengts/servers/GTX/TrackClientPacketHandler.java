@@ -495,7 +495,8 @@ public class TrackClientPacketHandler
         // byte la[] = StringTools.parseHex(l, null);
         // String las = new String(la);
         // Print.logInfo("l: " + las);
-        String id = fld[0].substring(4, 11);
+        String id = fld[0].substring(5, 11);
+        Print.logInfo("id: " + id);
         id = this.hexToString(id);
         Print.logInfo("id: " + id);
 
