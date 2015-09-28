@@ -523,8 +523,7 @@ public class TrackClientPacketHandler
             longitude = gprmc.getLongitude();
             speedKPH = gprmc.getSpeedKPH();
             heading = gprmc.getHeading();
-            gprmcparcial = fld[0].substring(12, fld[0].length());
-            gprmccortado = StringTools.parseString(gprmcparcial, ',');
+            gprmccortado = StringTools.parseString(data, ',');
             horautc = gprmccortado[1];
             fechautc = gprmccortado[9];
         } else {
