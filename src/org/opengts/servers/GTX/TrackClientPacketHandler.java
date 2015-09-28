@@ -491,15 +491,15 @@ public class TrackClientPacketHandler
         Print.logInfo("Ini: " + ini);
         String l = s.substring(2, 4);
         byte la[] = StringTools.parseHex(l, null);
-        String las = new String(la, "UTF-8");
+        String las = new String(la);
         Print.logInfo("l: " + las);
         String id = s.substring(4, 11);
         byte ida[] = StringTools.parseHex(id, null);
-        String idas = new String(ida, "UTF-8");
+        String idas = new String(ida);
         Print.logInfo("id: " + idas);
         String com = s.substring(11, 13);
         byte coma[] = StringTools.parseHex(com, null);
-        String comas = new String(coma, "UTF-8");
+        String comas = new String(coma);
         Print.logInfo("com: " + comas);
 
 //         if ((fld == null) || (fld.length < 14)) {
