@@ -496,100 +496,100 @@ public class TrackClientPacketHandler
         String com = s.substring(11, 13);
         Print.logInfo("com :" + com);
 
-        if ((fld == null) || (fld.length < 14)) {
-            Print.logWarn("Numero invalido de campos: ");
-            return null;
-        }
-        /* parsear campo 0 , $$, tamanno e IMEI*/
-        //String   campo0		= fld[0].toLowerCase();
-        //String   accountID  = fld[0].toLowerCase();
-        String IMEI = fld[0].substring(4, fld[0].length());
-        /* parse individual fields */
-        Print.logInfo("Largo cadena :" + s.length());
-        /* parse individual fields */
-//        Print.logWarn("s: " + s);
-//        Print.logWarn("lala: " + fld[1]);
-        String iniGPS = fld[1].substring(2, 3);
-//        Print.logWarn("iniGPS: " + iniGPS);
-        long fixtime;
-        int statusCode;
-        double latitude;
-        double longitude;
-        double speedKPH;
-        double heading;
-        double altitudeM = 0.0;  //
-        String gprmcparcial;
-        String gprmccortado[];
-        String horautc;
-        String fechautc;
-        if (iniGPS.compareTo("$") == 0) {
-            Nmea0183 gprmc = new Nmea0183(fld[1].substring(2, fld[1].length() - 1), true);
-            fixtime = gprmc.getFixtime();
-            statusCode = StatusCodes.STATUS_LOCATION;
-            latitude = gprmc.getLatitude();
-            longitude = gprmc.getLongitude();
-            speedKPH = gprmc.getSpeedKPH();
-            heading = gprmc.getHeading();
-            gprmcparcial = fld[1].substring(2, fld[1].length() - 1);
-            gprmccortado = StringTools.parseString(gprmcparcial, ',');
-            horautc = gprmccortado[1];
-            fechautc = gprmccortado[9];
-        } else {
-            Print.logWarn("Sin senal GPS");
-            fixtime = 0x0;
-            latitude = 0.0;
-            longitude = 0.0;
-            speedKPH = 0.0;
-            heading = 0.0;
-            gprmcparcial = "";
-            gprmccortado = null;
-            horautc = "";
-            fechautc = "";
-        }
-            //       Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), IGNORE_NMEA_CHECKSUM);
-
-        String aa = fld[1].substring(0, 2);
-        String mileage = fld[11];
-        String temp = fld[10];
-        String sa = fld[5];
-        String sd = fld[8];
-
-
-        /* no deviceID? */
-        if (StringTools.isBlank(IMEI)) {
-            Print.logWarn("DeviceID not specified!");
-            return null;
-        }
-
-        String url = "http://localhost/backend/alerta.php?"
-                + "IMEI=" + IMEI + ""
-                + "&statusCode=61472&"
-                + "fixtime=" + fixtime + ""
-                + "&horautc=" + horautc + ""
-                + "&fechautc=" + fechautc + ""
-                + "&fechafullutc=" + fld[6] + ""
-                + "&latitude=" + latitude + ""
-                + "&longitude=" + longitude + ""
-                + "&gpsAge=0"
-                + "&speedKPH=" + speedKPH + ""
-                + "&heading=" + heading + ""
-                + "&altitude=" + altitudeM + ""
-                + "&distanceKM=0"
-                + "&odometerKM=" + mileage + ""
-                + "&aa=" + aa + ""
-                + "&temp=" + temp + ""
-                + "&sa=" + sa + ""
-                + "&sd=" + sd + ""
-                + "&rawData=" + s;
-
-        Print.logInfo("Enviando :" + url);
-        try {
-            lanzar(url);
-        } catch (MalformedURLException e) {
-            Print.logInfo(e.getMessage());
-        } catch (IOException e) {
-            Print.logInfo(e.getMessage());
-        }
+//         if ((fld == null) || (fld.length < 14)) {
+//             Print.logWarn("Numero invalido de campos: ");
+//             return null;
+//         }
+//         /* parsear campo 0 , $$, tamanno e IMEI*/
+//         //String   campo0		= fld[0].toLowerCase();
+//         //String   accountID  = fld[0].toLowerCase();
+//         String IMEI = fld[0].substring(4, fld[0].length());
+//         /* parse individual fields */
+//         Print.logInfo("Largo cadena :" + s.length());
+//         /* parse individual fields */
+// //        Print.logWarn("s: " + s);
+// //        Print.logWarn("lala: " + fld[1]);
+//         String iniGPS = fld[1].substring(2, 3);
+// //        Print.logWarn("iniGPS: " + iniGPS);
+//         long fixtime;
+//         int statusCode;
+//         double latitude;
+//         double longitude;
+//         double speedKPH;
+//         double heading;
+//         double altitudeM = 0.0;  //
+//         String gprmcparcial;
+//         String gprmccortado[];
+//         String horautc;
+//         String fechautc;
+//         if (iniGPS.compareTo("$") == 0) {
+//             Nmea0183 gprmc = new Nmea0183(fld[1].substring(2, fld[1].length() - 1), true);
+//             fixtime = gprmc.getFixtime();
+//             statusCode = StatusCodes.STATUS_LOCATION;
+//             latitude = gprmc.getLatitude();
+//             longitude = gprmc.getLongitude();
+//             speedKPH = gprmc.getSpeedKPH();
+//             heading = gprmc.getHeading();
+//             gprmcparcial = fld[1].substring(2, fld[1].length() - 1);
+//             gprmccortado = StringTools.parseString(gprmcparcial, ',');
+//             horautc = gprmccortado[1];
+//             fechautc = gprmccortado[9];
+//         } else {
+//             Print.logWarn("Sin senal GPS");
+//             fixtime = 0x0;
+//             latitude = 0.0;
+//             longitude = 0.0;
+//             speedKPH = 0.0;
+//             heading = 0.0;
+//             gprmcparcial = "";
+//             gprmccortado = null;
+//             horautc = "";
+//             fechautc = "";
+//         }
+//             //       Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), IGNORE_NMEA_CHECKSUM);
+//
+//         String aa = fld[1].substring(0, 2);
+//         String mileage = fld[11];
+//         String temp = fld[10];
+//         String sa = fld[5];
+//         String sd = fld[8];
+//
+//
+//         /* no deviceID? */
+//         if (StringTools.isBlank(IMEI)) {
+//             Print.logWarn("DeviceID not specified!");
+//             return null;
+//         }
+//
+//         String url = "http://localhost/backend/alerta.php?"
+//                 + "IMEI=" + IMEI + ""
+//                 + "&statusCode=61472&"
+//                 + "fixtime=" + fixtime + ""
+//                 + "&horautc=" + horautc + ""
+//                 + "&fechautc=" + fechautc + ""
+//                 + "&fechafullutc=" + fld[6] + ""
+//                 + "&latitude=" + latitude + ""
+//                 + "&longitude=" + longitude + ""
+//                 + "&gpsAge=0"
+//                 + "&speedKPH=" + speedKPH + ""
+//                 + "&heading=" + heading + ""
+//                 + "&altitude=" + altitudeM + ""
+//                 + "&distanceKM=0"
+//                 + "&odometerKM=" + mileage + ""
+//                 + "&aa=" + aa + ""
+//                 + "&temp=" + temp + ""
+//                 + "&sa=" + sa + ""
+//                 + "&sd=" + sd + ""
+//                 + "&rawData=" + s;
+//
+//         Print.logInfo("Enviando :" + url);
+//         try {
+//             lanzar(url);
+//         } catch (MalformedURLException e) {
+//             Print.logInfo(e.getMessage());
+//         } catch (IOException e) {
+//             Print.logInfo(e.getMessage());
+//         }
         return null;
 
     }
