@@ -501,7 +501,7 @@ public class TrackClientPacketHandler
         // byte coma[] = StringTools.parseHex(com, null);
         // String comas = new String(coma);
         // Print.logInfo("com: " + comas);
-        if(ini.compareTo('$$') == 0) {
+        if(ini.compareTo("$$") == 0) {
             String data = fld[0].substring(13, fld[0].length() - 1);
             Print.logInfo("data: " + data);
             Nmea0183 gprmc = new Nmea0183(data, true);
