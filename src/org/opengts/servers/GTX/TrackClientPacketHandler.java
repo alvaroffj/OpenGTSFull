@@ -389,7 +389,7 @@ public class TrackClientPacketHandler
             byte rtn[] = null;
             switch (DATA_FORMAT_OPTION) {
                 case 1:
-                    rtn = this.parseInsertRecord_ASCII_1(s);
+                    rtn = this.parseInsertRecord_ASCII_1(s, pktBytes);
                     break;
                 case 2:
                     rtn = this.parseInsertRecord_ASCII_2(s);
@@ -452,7 +452,7 @@ public class TrackClientPacketHandler
     // ------------------------------------------------------------------------
 
     /* parse and insert data record */
-    private byte[] parseInsertRecord_ASCII_1(String s) {
+    private byte[] parseInsertRecord_ASCII_1(String s, byte pktBytes[]) {
         // This is an example showing how the server might parse one type of ASCII encoded data.
         // Since every device utilizes a different data format, this will likely not match the
         // format coming from your chosen device and may need some significant changes to support
@@ -497,7 +497,7 @@ public class TrackClientPacketHandler
         // Print.logInfo("l: " + las);
         String id = fld[0].substring(5, 12);
         Print.logInfo("id: " + id);
-        id = StringTools.toHexString(id);
+        id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
         Print.logInfo("id: " + id);
 
         // byte ida[] = StringTools.parseHex(id, null);
