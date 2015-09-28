@@ -567,16 +567,11 @@ public class TrackClientPacketHandler
         }
             //       Nmea0183 gprmc      = new Nmea0183(fld[1].substring(2,fld[1].length()-1), IGNORE_NMEA_CHECKSUM);
 
-        // String aa = fld[1].substring(0, 2);
-        // String mileage = fld[11];
-        // String temp = fld[10];
-        // String sa = fld[5];
-        // String sd = fld[8];
-        String aa = "AA";
-        String mileage = "0";
-        String temp = "0";
-        String sa = "0";
-        String sd = "0";
+        String aa = fld[1].substring(0, 2);
+        String mileage = fld[11];
+        String temp = fld[10];
+        String sa = fld[5];
+        String sd = fld[8];
 
 
         /* no deviceID? */
