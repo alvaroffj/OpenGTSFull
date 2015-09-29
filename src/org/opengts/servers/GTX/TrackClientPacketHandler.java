@@ -598,7 +598,7 @@ public class TrackClientPacketHandler
     public String getImei(String s) {
         String out = "";
         for (int i = 0; i < s.length() - 1; i += 1) {
-            String output = hex.substring(i, (i + 1));
+            String output = s.substring(i, (i + 1));
             if(output.compareTo("F") != 0) {
                 out = out+output;
             }
