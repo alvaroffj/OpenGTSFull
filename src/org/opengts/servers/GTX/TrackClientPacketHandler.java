@@ -488,22 +488,10 @@ public class TrackClientPacketHandler
         /* parse to fields */
         String fld[] = StringTools.parseString(s, '|');
         String ini = fld[0].substring(0, 2);
-        Print.logInfo("Ini: " + ini);
-        String IMEI = "12345678";
-
-        // String l = s.substring(2, 4);
-        // byte la[] = StringTools.parseHex(l, null);
-        // String las = new String(la);
-        // Print.logInfo("l: " + las);
         String id = fld[0].substring(5, 12);
-        Print.logInfo("id: " + id);
         id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
-        Print.logInfo("id: " + id);
-        String ids = this.getImei(id);
-        Print.logInfo("id: " + ids);
+        String IMEI = this.getImei(id);
 
-        // byte ida[] = StringTools.parseHex(id, null);
-        // String idas = new String(ida);
         // String com = s.substring(11, 13);
         // byte coma[] = StringTools.parseHex(com, null);
         // String comas = new String(coma);
