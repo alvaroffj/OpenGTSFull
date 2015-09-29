@@ -499,8 +499,8 @@ public class TrackClientPacketHandler
         Print.logInfo("id: " + id);
         id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
         Print.logInfo("id: " + id);
-        int idi = Integer.parseInt(id, 16);
-        Print.logInfo("id: " + String.format("%f", idi));
+        String ids = this.getImei(id);
+        Print.logInfo("id: " + ids);
 
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
@@ -593,6 +593,17 @@ public class TrackClientPacketHandler
         }
         return null;
 
+    }
+
+    public String getImei(String s) {
+        String out = "";
+        for (int i = 0; i < s.length() - 1; i += 1) {
+            String output = hex.substring(i, (i + 1));
+            if(output.compareTo("F") != 0) {
+                out = out+output;
+            }
+        }
+        return out;
     }
 
     public String hexToString(String hex) {
