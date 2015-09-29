@@ -499,8 +499,8 @@ public class TrackClientPacketHandler
         Print.logInfo("id: " + id);
         id = StringTools.toHexString(pktBytes, 4, 7, null).toString();
         Print.logInfo("id: " + id);
-        float idf = this.hexToFloat(id);
-        Print.logInfo("id: " + String.format("%f", idf));
+        int idi = Integer.parseInt(id, 16);
+        Print.logInfo("id: " + String.format("%f", idi));
 
         // byte ida[] = StringTools.parseHex(id, null);
         // String idas = new String(ida);
