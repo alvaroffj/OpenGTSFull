@@ -537,6 +537,11 @@ public class TrackClientPacketHandler
         String temp = "0";
         String sa = fld[3];
         String sd = "0";
+        if(sa.substring(0,1).compareTo("1") == 0 || sa.substring(0,1).compareTo("3") == 0) {
+            sa = sa + "1";
+        } else {
+            sa = sa + "0";
+        }
 //         String aa = fld[1].substring(0, 2);
 //         String mileage = fld[11];
 //         String temp = fld[10];
